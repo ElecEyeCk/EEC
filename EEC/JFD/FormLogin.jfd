@@ -1,0 +1,80 @@
+JFDML JFormDesigner: "7.0.4.0.360" Java: "15.0.1" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+			name: "Login"
+			"title": "登录"
+			"resizable": false
+			"$locationPolicy": 1
+			"defaultCloseOperation": 3
+			"$sizePolicy": 1
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnRegister"
+				"text": "注册"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnRegisterActionPerformed", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 110
+				"y": 205
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnLogin"
+				"text": "登录"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnLoginActionPerformed", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 285
+				"y": 205
+			} )
+			add( new FormComponent( "javax.swing.JPasswordField" ) {
+				name: "pwPassword"
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 120
+				"y": 110
+				"width": 269
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lbPassword"
+				"text": "密码："
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 75
+				"y": 115
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lbAccount"
+				"text": "账号："
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 75
+				"y": 70
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "tfAccount"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "tfAccountActionPerformed", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 120
+				"y": 65
+				"width": 269
+			} )
+			add( new FormComponent( "javax.swing.JRadioButton" ) {
+				name: "rbtnSeller"
+				"text": "店主"
+				addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "rbtnSellerStateChanged", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 125
+				"y": 160
+			} )
+			add( new FormComponent( "javax.swing.JRadioButton" ) {
+				name: "rbtnConsumer"
+				"text": "客户"
+				"selected": true
+				addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "rbtnConsumerStateChanged", true ) )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 300
+				"y": 160
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 465, 330 )
+		} )
+	}
+}
