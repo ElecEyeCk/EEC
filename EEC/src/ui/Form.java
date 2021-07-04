@@ -5,7 +5,7 @@ public class Form {
 
 
     public Form() {
-       showing = false;
+        showing = false;
     }
 
     public void show(boolean status) {
@@ -17,6 +17,14 @@ public class Form {
             ((FormSeller) t).Seller.setVisible(status);
         } else if (this instanceof FormLogin) {
             ((FormLogin) t).Login.setVisible(status);
+        } else if (this instanceof FormDetail) {
+            ((FormDetail) t).Detail.setVisible(status);
+        } else if (this instanceof FormRegister) {
+            ((FormRegister) t).Register.setVisible(status);
+        } else if (this instanceof FormSettings) {
+            ((FormSettings) t).Settings.setVisible(status);
+        } else if (this instanceof FormShopSettings) {
+            ((FormShopSettings) t).ShopSettings.setVisible(status);
         }
     }
 }

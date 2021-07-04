@@ -1,27 +1,27 @@
-package ui;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
 /*
  * Created by JFormDesigner on Sat Jul 03 17:10:59 CST 2021
  */
 
 
+
 /**
  * @author somnusym
  */
-public class FormConsumer extends Form {
-
-	public FormConsumer() {
-		initComponents();
-	}
+public class FormConsumer  {
 
 	private void btnSearchActionPerformed(ActionEvent e) {
+		// TODO add your code here
+	}
+
+	private void comboBox1ItemStateChanged(ItemEvent e) {
+		// TODO add your code here
+	}
+
+	private void cbJDItemStateChanged(ItemEvent e) {
 		// TODO add your code here
 	}
 
@@ -69,7 +69,7 @@ public class FormConsumer extends Form {
 			Consumer.setTitle("\u666e\u901a\u7528\u6237");
 			Consumer.setResizable(false);
 			Consumer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-			Consumer.setIconImage(new ImageIcon(getClass().getResource("/jpg/ICON.jpg")).getImage());
+			Consumer.setIconImage(new ImageIcon(getClass().getResource("/resource/jpg/ICON.jpg")).getImage());
 			Container ConsumerContentPane = Consumer.getContentPane();
 			ConsumerContentPane.setLayout(null);
 

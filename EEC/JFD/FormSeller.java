@@ -1,26 +1,23 @@
-package ui;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
 /*
  * Created by JFormDesigner on Sat Jul 03 17:11:01 CST 2021
  */
 
 
+
 /**
  * @author somnusym
  */
-public class FormSeller extends Form {
-
-	public FormSeller() {
-	    initComponents();
-	}
+public class FormSeller  {
 
 	private void btnSearchActionPerformed(ActionEvent e) {
+		// TODO add your code here
+	}
+
+	private void comboBox1ItemStateChanged(ItemEvent e) {
 		// TODO add your code here
 	}
 
@@ -57,11 +54,11 @@ public class FormSeller extends Form {
 	}
 
 	private void miShopSettingsActionPerformed(ActionEvent e) {
-		FormManager.FSSe.show(true);
+		// TODO add your code here
 	}
 
 	private void miSettingsActionPerformed(ActionEvent e) {
-		FormManager.FSe.show(true);
+		// TODO add your code here
 	}
 
 	private void initComponents() {
@@ -98,7 +95,7 @@ public class FormSeller extends Form {
 			Seller.setTitle("\u5e97\u4e3b");
 			Seller.setResizable(false);
 			Seller.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-			Seller.setIconImage(new ImageIcon(getClass().getResource("/jpg/ICON.jpg")).getImage());
+			Seller.setIconImage(new ImageIcon(getClass().getResource("/resource/jpg/ICON.jpg")).getImage());
 			Container SellerContentPane = Seller.getContentPane();
 			SellerContentPane.setLayout(null);
 

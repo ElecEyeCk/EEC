@@ -1,11 +1,14 @@
 package EEC;
 
-import com.formdev.flatlaf.FlatIntelliJLaf;
+import DTO.User;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubIJTheme;
 import ui.FormManager;
 
 public class EEC {
+    public static User curUser;
+
     public static void main(String[] args) {
-        FlatIntelliJLaf.setup();
+        FlatGitHubIJTheme.setup();
         FormManager.FL.show(true);
     }
 }
