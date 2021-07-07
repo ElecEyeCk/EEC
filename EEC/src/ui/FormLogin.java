@@ -26,6 +26,17 @@ public class FormLogin extends Form {
     }
 
     private void btnLoginActionPerformed(ActionEvent e) {
+        // 调试专用
+        if (ftfAccount.getText().equals("s")) {
+            FormManager.FL.show(false);
+            FormManager.FS.show(true);
+            return;
+        } else if (ftfAccount.getText().equals("c")) {
+            FormManager.FL.show(false);
+            FormManager.FC.show(true);
+            return;
+        }
+
         if (ftfAccount.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "用户名不可为空！", "警告", JOptionPane.WARNING_MESSAGE);
             return;
@@ -43,8 +54,7 @@ public class FormLogin extends Form {
         FormManager.FL.show(false);
         if (EEC.curUser.getShopLink() == null || EEC.curUser.getShopLink().equals("")) {
             FormManager.FC.show(true);
-        }
-        else {
+        } else {
             FormManager.FS.show(true);
         }
     }

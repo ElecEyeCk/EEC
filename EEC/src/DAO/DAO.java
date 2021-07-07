@@ -7,8 +7,9 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class DAO {
-    static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://39.105.220.167:3306/EEC?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+    private static final String IP = "47.93.25.52";
+    private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
+    private static final String DB_URL = "jdbc:mysql://" + IP + ":3306/EEC?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
 
 
     // 数据库的用户名与密码，需要根据自己的设置

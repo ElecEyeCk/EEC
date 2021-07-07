@@ -13,6 +13,7 @@ public class EECError {
 
     // 系统逻辑错误
     public static final int CONNECT_ERROR = 20001;
+    public static final int AWT_ERROR = 20002;
 
     private static Map<Integer, String> map = new HashMap<>();
 
@@ -22,6 +23,7 @@ public class EECError {
         map.put(ID_EXISTED, "用户名已存在");
 
         map.put(CONNECT_ERROR, "服务器连接失败");
+        map.put(AWT_ERROR, "窗口组件错误");
     }
 
     public static void errorTips(int errorCode) {

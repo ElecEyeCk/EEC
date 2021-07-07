@@ -1,5 +1,7 @@
 package ui;
 
+import DTO.Item;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -96,6 +98,10 @@ public class FormDetail extends Form {
             Detail.setLocationRelativeTo(null);
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
+    }
+
+    public void setDetail(Item item) {
+
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables

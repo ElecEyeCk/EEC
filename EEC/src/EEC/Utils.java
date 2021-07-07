@@ -2,7 +2,11 @@ package EEC;
 
 import DAO.DAO;
 
+import javax.swing.*;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 public class Utils {
     public static int validateLogin(String account, String password) {
@@ -12,10 +16,9 @@ public class Utils {
         else {
             ArrayList<Object> passwords = DAO.search("SELECT password FROM user where ID='" + account + "'", "password");
             String pw = (String) passwords.get(0);
-            if (!pw.equals(password)){
+            if (!pw.equals(password)) {
                 return EECError.PASSWORD_ERROR;
-            }
-            else {
+            } else {
                 return EECError.SUCCESS;
             }
         }
@@ -36,5 +39,38 @@ public class Utils {
                 return true;
         }
         return false;
+    }
+
+    public static void FitTableColumns(JTable myTable, String[] ignoredColumnLabels) {
+        JTableHeader header = myTable.getTableHeader();
+        int rowCount = myTable.getRowCount();
+        int sum = 0;
+        Enumeration<TableColumn> columns = myTable.getColumnModel().getColumns();
+        while (columns.hasMoreElements()) {
+            boolean flag = false;
+            TableColumn column = columns.nextElement();
+            for (String str : ignoredColumnLabels)
+                if (column.getHeaderValue().equals(str)) {
+                    flag = true;
+                    sum += column.getWidth();
+                    break;
+                }
+            if (flag) continue;
+            int col = header.getColumnModel().getColumnIndex(column.getIdentifier());
+            int width = (int) myTable.getTableHeader().getDefaultRenderer()
+                    .getTableCellRendererComponent(myTable, column.getIdentifier(), false, false, -1, col)
+                    .getPreferredSize().getWidth();
+            for (int row = 0; row < rowCount; row++) {
+                int preferredWidth = (int) myTable.getCellRenderer(row, col)
+                        .getTableCellRendererComponent(myTable, myTable.getValueAt(row, col), false, false, row, col).getPreferredSize().getWidth();
+                width = Math.max(width, preferredWidth);
+            }
+            header.setResizingColumn(column);
+            int fixedW = myTable.getIntercellSpacing().width;
+            column.setWidth(width + fixedW + 5);
+            sum += column.getWidth();
+        }
+        if (sum < myTable.getWidth())
+            myTable.getColumnModel().getColumn(0).setWidth(myTable.getWidth() - sum + myTable.getColumnModel().getColumn(0).getWidth());
     }
 }

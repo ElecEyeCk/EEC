@@ -1,31 +1,36 @@
+/*
+ * Created by JFormDesigner on Wed Jul 07 14:38:56 CST 2021
+ */
+
+package JFD;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
-/*
- * Created by JFormDesigner on Sat Jul 03 17:11:01 CST 2021
- */
-
-
 
 /**
  * @author somnusym
  */
 public class FormSeller  {
 
+	private void miShopSettingsActionPerformed(ActionEvent e) {
+		// TODO add your code here
+	}
+
+	private void miQuitLoginActionPerformed(ActionEvent e) {
+		// TODO add your code here
+	}
+
+	private void miSettingsActionPerformed(ActionEvent e) {
+		// TODO add your code here
+	}
+
 	private void btnSearchActionPerformed(ActionEvent e) {
 		// TODO add your code here
 	}
 
-	private void comboBox1ItemStateChanged(ItemEvent e) {
-		// TODO add your code here
-	}
-
 	private void cbSortItemStateChanged(ItemEvent e) {
-		// TODO add your code here
-	}
-
-	private void listShopResultValueChanged(ListSelectionEvent e) {
 		// TODO add your code here
 	}
 
@@ -37,11 +42,19 @@ public class FormSeller  {
 		// TODO add your code here
 	}
 
-	private void cbAMAZONStateChanged(ChangeEvent e) {
+	private void cbAMAZONActionPerformed(ActionEvent e) {
 		// TODO add your code here
 	}
 
-	private void cbDDStateChanged(ChangeEvent e) {
+	private void cbDDActionPerformed(ActionEvent e) {
+		// TODO add your code here
+	}
+
+	private void spTableResultMouseClicked(MouseEvent e) {
+		// TODO add your code here
+	}
+
+	private void spTabelShopResultMouseClicked(MouseEvent e) {
 		// TODO add your code here
 	}
 
@@ -53,31 +66,20 @@ public class FormSeller  {
 		// TODO add your code here
 	}
 
-	private void miShopSettingsActionPerformed(ActionEvent e) {
-		// TODO add your code here
-	}
-
-	private void miSettingsActionPerformed(ActionEvent e) {
-		// TODO add your code here
-	}
-
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		Seller = new JFrame();
 		mbSeller = new JMenuBar();
 		mShop = new JMenu();
 		miShopSettings = new JMenuItem();
+		miQuitLogin = new JMenuItem();
 		mSettings = new JMenu();
 		miSettings = new JMenuItem();
 		miAbout = new JMenuItem();
 		sp = new JSeparator();
 		tfInput = new JTextField();
 		btnSearch = new JButton();
-		spList = new JScrollPane();
-		listResult = new JList();
 		cbSort = new JComboBox<>();
-		spShopList = new JScrollPane();
-		listShopResult = new JList();
 		lbSearch = new JLabel();
 		lbShop = new JLabel();
 		tfShopInput = new JTextField();
@@ -86,6 +88,10 @@ public class FormSeller  {
 		cbJD = new JCheckBox();
 		cbAMAZON = new JCheckBox();
 		cbDD = new JCheckBox();
+		spTableResult = new JScrollPane();
+		tbResult = new JTable();
+		spTabelShopResult = new JScrollPane();
+		tbShopResult = new JTable();
 		pmShop = new JPopupMenu();
 		miShopDetail = new JMenuItem();
 		miShopBuy = new JMenuItem();
@@ -104,12 +110,17 @@ public class FormSeller  {
 
 				//======== mShop ========
 				{
-					mShop.setText("\u5e97\u94fa");
+					mShop.setText("\u8d26\u53f7");
 
 					//---- miShopSettings ----
 					miShopSettings.setText("\u5e97\u94fa\u8bbe\u7f6e");
 					miShopSettings.addActionListener(e -> miShopSettingsActionPerformed(e));
 					mShop.add(miShopSettings);
+
+					//---- miQuitLogin ----
+					miQuitLogin.setText("\u9000\u51fa\u767b\u5f55");
+					miQuitLogin.addActionListener(e -> miQuitLoginActionPerformed(e));
+					mShop.add(miQuitLogin);
 				}
 				mbSeller.add(mShop);
 
@@ -144,13 +155,6 @@ public class FormSeller  {
 			SellerContentPane.add(btnSearch);
 			btnSearch.setBounds(new Rectangle(new Point(405, 65), btnSearch.getPreferredSize()));
 
-			//======== spList ========
-			{
-				spList.setViewportView(listResult);
-			}
-			SellerContentPane.add(spList);
-			spList.setBounds(40, 160, 440, 355);
-
 			//---- cbSort ----
 			cbSort.setMaximumRowCount(5);
 			cbSort.setModel(new DefaultComboBoxModel<>(new String[] {
@@ -162,16 +166,6 @@ public class FormSeller  {
 			cbSort.addItemListener(e -> cbSortItemStateChanged(e));
 			SellerContentPane.add(cbSort);
 			cbSort.setBounds(new Rectangle(new Point(400, 110), cbSort.getPreferredSize()));
-
-			//======== spShopList ========
-			{
-
-				//---- listShopResult ----
-				listShopResult.addListSelectionListener(e -> listShopResultValueChanged(e));
-				spShopList.setViewportView(listShopResult);
-			}
-			SellerContentPane.add(spShopList);
-			spShopList.setBounds(520, 115, 440, 400);
 
 			//---- lbSearch ----
 			lbSearch.setText("\u67e5\u8be2");
@@ -207,15 +201,41 @@ public class FormSeller  {
 
 			//---- cbAMAZON ----
 			cbAMAZON.setText("\u4e9a\u9a6c\u900a");
-			cbAMAZON.addChangeListener(e -> cbAMAZONStateChanged(e));
+			cbAMAZON.addActionListener(e -> cbAMAZONActionPerformed(e));
 			SellerContentPane.add(cbAMAZON);
 			cbAMAZON.setBounds(new Rectangle(new Point(175, 115), cbAMAZON.getPreferredSize()));
 
 			//---- cbDD ----
 			cbDD.setText("\u5f53\u5f53\u7f51");
-			cbDD.addChangeListener(e -> cbDDStateChanged(e));
+			cbDD.addActionListener(e -> cbDDActionPerformed(e));
 			SellerContentPane.add(cbDD);
 			cbDD.setBounds(new Rectangle(new Point(255, 115), cbDD.getPreferredSize()));
+
+			//======== spTableResult ========
+			{
+				spTableResult.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						spTableResultMouseClicked(e);
+					}
+				});
+				spTableResult.setViewportView(tbResult);
+			}
+			SellerContentPane.add(spTableResult);
+			spTableResult.setBounds(40, 160, 440, 355);
+
+			//======== spTabelShopResult ========
+			{
+				spTabelShopResult.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						spTabelShopResultMouseClicked(e);
+					}
+				});
+				spTabelShopResult.setViewportView(tbShopResult);
+			}
+			SellerContentPane.add(spTabelShopResult);
+			spTabelShopResult.setBounds(520, 115, 440, 400);
 
 			{
 				// compute preferred size
@@ -256,17 +276,14 @@ public class FormSeller  {
 	private JMenuBar mbSeller;
 	private JMenu mShop;
 	private JMenuItem miShopSettings;
+	private JMenuItem miQuitLogin;
 	private JMenu mSettings;
 	private JMenuItem miSettings;
 	private JMenuItem miAbout;
 	private JSeparator sp;
 	private JTextField tfInput;
 	private JButton btnSearch;
-	private JScrollPane spList;
-	private JList listResult;
 	private JComboBox<String> cbSort;
-	private JScrollPane spShopList;
-	private JList listShopResult;
 	private JLabel lbSearch;
 	private JLabel lbShop;
 	private JTextField tfShopInput;
@@ -275,6 +292,10 @@ public class FormSeller  {
 	private JCheckBox cbJD;
 	private JCheckBox cbAMAZON;
 	private JCheckBox cbDD;
+	private JScrollPane spTableResult;
+	private JTable tbResult;
+	private JScrollPane spTabelShopResult;
+	private JTable tbShopResult;
 	private JPopupMenu pmShop;
 	private JMenuItem miShopDetail;
 	private JMenuItem miShopBuy;

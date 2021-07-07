@@ -1,45 +1,49 @@
 package DTO;
 
 import DAO.DAO;
-import com.kitfox.svg.A;
 
 import java.util.ArrayList;
 
 public class Item {
     private String name;
     private String link;
-    private String picLink;
+    private String class_;
     private String icons;
-    private int commit;
+    private String comments;
     private double price;
     private String shop;
-    private String date;
+    private int date;
 
-    public Item(String name, String link, String picLink, String icons, int commit, double price, String shop,String date) {
+    public static final int COMMENTS_HIGH_TO_LOW = 0;
+    public static final int COMMENTS_LOW_TO_HIGH = 1;
+    public static final int PRICE_HIGH_TO_LOW = 2;
+    public static final int PRICE_LOW_TO_HIGH = 3;
+
+    public Item(String name, String link, String picLink, String icons, String commit, double price, String shop, int date) {
         this.name = name;
         this.link = link;
-        this.picLink = picLink;
+        this.class_ = picLink;
         this.icons = icons;
-        this.commit = commit;
+        this.comments = commit;
         this.price = price;
         this.shop = shop;
-        this.date=date;
+        this.date = date;
     }
 
     public String getLink() {
         return link;
     }
 
-    public String getPicLink() {
-        return picLink;
+    public String getClass_() {
+        return class_;
     }
 
     public String getIcons() {
         return icons;
     }
 
-    public int getCommit() {
-        return commit;
+    public String getComments() {
+        return comments;
     }
 
     public double getPrice() {
@@ -53,38 +57,80 @@ public class Item {
     public String getName() {
         return name;
     }
-    
-    public String getDate() {
+
+    public int getDate() {
         return date;
     }
-    
-    public  Item getItem(String name){
-        ArrayList<String> columnLabels = new ArrayList<>();
 
+    public static Item getItem(String name, int date) {
+        ArrayList<String> columnLabels = initItemColumnLabels();
+        ArrayList<ArrayList<Object>> itemObjs = DAO.search("SELECT name,adr,class,icons,commit,price,shop,date 07commodity user where name='" + name + "' and date=" + date, columnLabels);
+        return AAOtoI(itemObjs, 0);
+    }
+
+    private static ArrayList<String> initItemColumnLabels() {
+        ArrayList<String> columnLabels = new ArrayList<>();
         columnLabels.add("name");
-        columnLabels.add("link");
-        columnLabels.add("picLink");
+        columnLabels.add("adr");
+        columnLabels.add("class");
         columnLabels.add("icons");
         columnLabels.add("commit");
         columnLabels.add("price");
         columnLabels.add("shop");
         columnLabels.add("date");
-        ArrayList<ArrayList<Object>>  itemObjs = DAO.search("SELECT name,link,picLink,icons,commit,price,shop,date FROM user where name='" + name + "'", columnLabels);
-        return new Item((String)itemObjs.get(0).get(0),(String)itemObjs.get(1).get(0),(String)itemObjs.get(2).get(0),(String)itemObjs.get(3).get(0),(Integer)itemObjs.get(4).get(0),(Double) itemObjs.get(5).get(0),(String)itemObjs.get(6).get(0),(String)itemObjs.get(7).get(0));
-   }
-    
-     public ArrayList<ArrayList<Object>> getItem2(String keyword){
-        ArrayList<String> columnLabels1 = new ArrayList<>();
+        return columnLabels;
+    }
 
-        columnLabels1.add("name");
-        columnLabels1.add("link");
-        columnLabels1.add("picLink");
-        columnLabels1.add("icons");
-        columnLabels1.add("commit");
-        columnLabels1.add("price");
-        columnLabels1.add("shop");
-        columnLabels1.add("date");
-        return DAO.search("SELECT name,link,picLink,icons,commit,price,shop,date FROM user where name LIKE'%" + keyword + "%'", columnLabels1);
+    public static ArrayList<Item> getItems(String keyword, int sort, int date) {
+        ArrayList<String> columnLabels = initItemColumnLabels();
+        ArrayList<ArrayList<Object>> result = null;
+        if (sort == COMMENTS_LOW_TO_HIGH)
+            result = DAO.search("SELECT name,adr,class,icons,commit,price,shop,date FROM 07commodity where name LIKE '%" + keyword + "%' and date=" + date + " ORDER BY commit ASC", columnLabels);
+        else if (sort == COMMENTS_HIGH_TO_LOW)
+            result = DAO.search("SELECT name,adr,class,icons,commit,price,shop,date FROM 07commodity where name LIKE '%" + keyword + "%' and date=" + date + " ORDER BY commit DESC", columnLabels);
+        else if (sort == PRICE_LOW_TO_HIGH)
+            result = DAO.search("SELECT name,adr,class,icons,commit,price,shop,date FROM 07commodity where name LIKE '%" + keyword + "%' and date=" + date + " ORDER BY price ASC", columnLabels);
+        else if (sort == PRICE_HIGH_TO_LOW)
+            result = DAO.search("SELECT name,adr,class,icons,commit,price,shop,date FROM 07commodity where name LIKE '%" + keyword + "%' and date=" + date + " ORDER BY price DESC", columnLabels);
+        ArrayList<Item> items = new ArrayList<>();
+        for (int i = 0; i < result.get(0).size(); i++) {
+            items.add(AAOtoI(result, i));
+        }
+        return items;
+    }
 
+    private static Item AAOtoI(ArrayList<ArrayList<Object>> AAO, int index) {
+        Integer commentsInteger = (Integer) AAO.get(4).get(index);
+        String comments = String.valueOf(commentsInteger);
+        if (comments.equals("null"))
+            comments = "0";
+        if (Integer.parseInt(comments) >= 100) {
+            comments = AAO.get(4).get(index) + "+";
+        }
+        String icons = (String) AAO.get(3).get(index);
+        if (icons == null || icons.equals("nan"))
+            icons = "";
+        return new Item(
+                (String) AAO.get(0).get(index),
+                (String) AAO.get(1).get(index),
+                (String) AAO.get(2).get(index),
+                icons,
+                comments,
+                (Double) AAO.get(5).get(index),
+                (String) AAO.get(6).get(index),
+                (Integer) AAO.get(7).get(index)
+        );
+    }
+
+    @Override
+    public String toString() {
+        return name + ' ' +
+                link + ' ' +
+                class_ + ' ' +
+                icons + ' ' +
+                comments + ' ' +
+                price + ' ' +
+                shop + ' ' +
+                date + ' ';
     }
 }
