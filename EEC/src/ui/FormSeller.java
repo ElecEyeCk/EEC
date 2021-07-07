@@ -82,6 +82,7 @@ public class FormSeller extends Form {
 
     private void tbResultMouseClicked(MouseEvent e) {
         if (e.isMetaDown()) {
+            robot.mouseMove(e.getX(), e.getY());
             robot.mousePress(MouseEvent.BUTTON1);
             robot.mouseRelease(MouseEvent.BUTTON1);
             robot.mousePress(MouseEvent.BUTTON3);

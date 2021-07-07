@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class DAO {
-    private static final String IP = "47.93.25.52";
+    private static final String IP = "123.57.42.155";
     private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql://" + IP + ":3306/EEC?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
 
