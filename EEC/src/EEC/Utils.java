@@ -5,7 +5,9 @@ import DAO.DAO;
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 
 public class Utils {
@@ -17,7 +19,7 @@ public class Utils {
             ArrayList<Object> passwords = DAO.search("SELECT password FROM user where ID='" + account + "'", "password");
             String pw = (String) passwords.get(0);
             if (!pw.equals(password)) {
-                return EECError.PASSWORD_ERROR;
+                return EECError.WRONG_PASSWORD;
             } else {
                 return EECError.SUCCESS;
             }
@@ -72,5 +74,20 @@ public class Utils {
         }
         if (sum < myTable.getWidth())
             myTable.getColumnModel().getColumn(0).setWidth(myTable.getWidth() - sum + myTable.getColumnModel().getColumn(0).getWidth());
+    }
+
+    public static int getCurrentDate() {
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
+        return Integer.parseInt(df.format(new Date()));// new Date()为获取当前系统时间
+    }
+
+    public static int getNewestDate() {
+        ArrayList<Object> result = DAO.search("select date from date", "date");
+        int max = 0;
+        for (Object obj : result) {
+            int date = (Integer) obj;
+            max = Math.max(date, max);
+        }
+        return max;
     }
 }

@@ -5,6 +5,7 @@ import DAO.DAO;
 import java.util.ArrayList;
 
 public class Item {
+    private String ID;
     private String name;
     private String link;
     private String class_;
@@ -13,21 +14,24 @@ public class Item {
     private double price;
     private String shop;
     private int date;
+    private String picLink;
 
     public static final int COMMENTS_HIGH_TO_LOW = 0;
     public static final int COMMENTS_LOW_TO_HIGH = 1;
     public static final int PRICE_HIGH_TO_LOW = 2;
     public static final int PRICE_LOW_TO_HIGH = 3;
 
-    public Item(String name, String link, String picLink, String icons, String commit, double price, String shop, int date) {
+    public Item(String id, String name, String link, String class_, String icons, String commit, double price, String shop, int date, String picLink) {
+        ID = id;
         this.name = name;
         this.link = link;
-        this.class_ = picLink;
+        this.class_ = class_;
         this.icons = icons;
         this.comments = commit;
         this.price = price;
         this.shop = shop;
         this.date = date;
+        this.picLink = picLink;
     }
 
     public String getLink() {
@@ -64,7 +68,13 @@ public class Item {
 
     public static Item getItem(String name, int date) {
         ArrayList<String> columnLabels = initItemColumnLabels();
-        ArrayList<ArrayList<Object>> itemObjs = DAO.search("SELECT name,adr,class,icons,commit,price,shop,date 07commodity user where name='" + name + "' and date=" + date, columnLabels);
+        ArrayList<ArrayList<Object>> itemObjs = DAO.search("SELECT name,adr,class,icons,commit,price,shop,date,id,img FROM 07commodity user where name='" + name + "' and date=" + date, columnLabels);
+        return AAOtoI(itemObjs, 0);
+    }
+
+    public static Item getItemByID(String id, int date) {
+        ArrayList<String> columnLabels = initItemColumnLabels();
+        ArrayList<ArrayList<Object>> itemObjs = DAO.search("SELECT name,adr,class,icons,commit,price,shop,date,id,img FROM 07commodity user where id=" + id + " and date=" + date, columnLabels);
         return AAOtoI(itemObjs, 0);
     }
 
@@ -78,6 +88,8 @@ public class Item {
         columnLabels.add("price");
         columnLabels.add("shop");
         columnLabels.add("date");
+        columnLabels.add("id");
+        columnLabels.add("img");
         return columnLabels;
     }
 
@@ -85,13 +97,13 @@ public class Item {
         ArrayList<String> columnLabels = initItemColumnLabels();
         ArrayList<ArrayList<Object>> result = null;
         if (sort == COMMENTS_LOW_TO_HIGH)
-            result = DAO.search("SELECT name,adr,class,icons,commit,price,shop,date FROM 07commodity where name LIKE '%" + keyword + "%' and date=" + date + " ORDER BY commit ASC", columnLabels);
+            result = DAO.search("SELECT name,adr,class,icons,commit,price,shop,date,id,img FROM 07commodity where name LIKE '%" + keyword + "%' and date=" + date + " ORDER BY commit ASC", columnLabels);
         else if (sort == COMMENTS_HIGH_TO_LOW)
-            result = DAO.search("SELECT name,adr,class,icons,commit,price,shop,date FROM 07commodity where name LIKE '%" + keyword + "%' and date=" + date + " ORDER BY commit DESC", columnLabels);
+            result = DAO.search("SELECT name,adr,class,icons,commit,price,shop,date,id,img FROM 07commodity where name LIKE '%" + keyword + "%' and date=" + date + " ORDER BY commit DESC", columnLabels);
         else if (sort == PRICE_LOW_TO_HIGH)
-            result = DAO.search("SELECT name,adr,class,icons,commit,price,shop,date FROM 07commodity where name LIKE '%" + keyword + "%' and date=" + date + " ORDER BY price ASC", columnLabels);
+            result = DAO.search("SELECT name,adr,class,icons,commit,price,shop,date,id,img FROM 07commodity where name LIKE '%" + keyword + "%' and date=" + date + " ORDER BY price ASC", columnLabels);
         else if (sort == PRICE_HIGH_TO_LOW)
-            result = DAO.search("SELECT name,adr,class,icons,commit,price,shop,date FROM 07commodity where name LIKE '%" + keyword + "%' and date=" + date + " ORDER BY price DESC", columnLabels);
+            result = DAO.search("SELECT name,adr,class,icons,commit,price,shop,date,id,img FROM 07commodity where name LIKE '%" + keyword + "%' and date=" + date + " ORDER BY price DESC", columnLabels);
         ArrayList<Item> items = new ArrayList<>();
         for (int i = 0; i < result.get(0).size(); i++) {
             items.add(AAOtoI(result, i));
@@ -110,7 +122,11 @@ public class Item {
         String icons = (String) AAO.get(3).get(index);
         if (icons == null || icons.equals("nan"))
             icons = "";
+        String picLink = (String) AAO.get(9).get(index);
+        if (picLink == null || picLink.equals("0"))
+            picLink = "";
         return new Item(
+                (String) AAO.get(8).get(index),
                 (String) AAO.get(0).get(index),
                 (String) AAO.get(1).get(index),
                 (String) AAO.get(2).get(index),
@@ -118,8 +134,8 @@ public class Item {
                 comments,
                 (Double) AAO.get(5).get(index),
                 (String) AAO.get(6).get(index),
-                (Integer) AAO.get(7).get(index)
-        );
+                (Integer) AAO.get(7).get(index),
+                picLink);
     }
 
     @Override
@@ -132,5 +148,13 @@ public class Item {
                 price + ' ' +
                 shop + ' ' +
                 date + ' ';
+    }
+
+    public String getPicLink() {
+        return picLink;
+    }
+
+    public String getID() {
+        return ID;
     }
 }

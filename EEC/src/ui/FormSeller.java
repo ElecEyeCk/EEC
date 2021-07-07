@@ -5,19 +5,17 @@ import EEC.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 
 
 /**
  * @author somnusym
  */
 public class FormSeller extends Form {
-    private Robot robot;
 
     public FormSeller() {
         initComponents();
@@ -26,7 +24,7 @@ public class FormSeller extends Form {
     private void btnSearchActionPerformed(ActionEvent e) {
         if (tfInput.getText().equals(""))
             return;
-        ArrayList<Item> items = Item.getItems(tfInput.getText(), cbSort.getSelectedIndex(), 20210704);
+        ArrayList<Item> items = Item.getItems(tfInput.getText(), cbSort.getSelectedIndex(), EEC.currentDate);
         String[] columnLabels = {"名称", "价格", "评论数", "店铺", "标签"};
         String[][] rowData = new String[items.size()][];
         for (int i = 0; i < items.size(); i++) {
@@ -57,13 +55,22 @@ public class FormSeller extends Form {
     }
 
     private void miShopDetailActionPerformed(ActionEvent e) {
-        Item item = Item.getItem((String) tbShopResult.getValueAt(tbShopResult.getSelectedRow(), 0), 20210704);
+        Item item = Item.getItem((String) tbResult.getValueAt(tbResult.getSelectedRow(), 0), EEC.currentDate);
         FormManager.FD.setDetail(item);
         FormManager.FD.show(true);
     }
 
     private void miShopBuyActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        JMenuItem mi = (JMenuItem) e.getSource();
+        if (mi.getX() >= tbResult.getX() && mi.getY() >= tbResult.getY() && mi.getX() <= tbResult.getX() + tbResult.getWidth() && mi.getY() <= tbResult.getY() + tbResult.getHeight()) {
+            String name = (String) tbResult.getValueAt(tbResult.getSelectedRow(), 0);
+            Item item = Item.getItem(name, EEC.currentDate);
+            try {
+                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler https:" + item.getLink());
+            } catch (IOException ioException) {
+                EECError.errorTips(EECError.OPEN_URL_ERROR);
+            }
+        }
     }
 
     private void miShopSettingsActionPerformed(ActionEvent e) {
@@ -82,14 +89,21 @@ public class FormSeller extends Form {
 
     private void tbResultMouseClicked(MouseEvent e) {
         if (e.isMetaDown()) {
-            robot.mouseMove(e.getX(), e.getY());
-            robot.mousePress(MouseEvent.BUTTON1);
-            robot.mouseRelease(MouseEvent.BUTTON1);
-            robot.mousePress(MouseEvent.BUTTON3);
-            robot.mouseRelease(MouseEvent.BUTTON3);
-            if (tbResult.hasFocus()) {
-                pmShop.show(e.getComponent(), e.getX(), e.getY());
+            int row = tbResult.rowAtPoint(e.getPoint());
+            int[] rows = tbResult.getSelectedRows();
+            boolean inSelected = false;
+            //判断当前右键所在行是否已选中
+            for (int r : rows) {
+                if (row == r) {
+                    inSelected = true;
+                    break;
+                }
             }
+            //当前鼠标右键点击所在行不被选中则高亮显示选中行
+            if (!inSelected) {
+                tbResult.setRowSelectionInterval(row, row);
+            }
+            pmShop.show(e.getComponent(), e.getX(), e.getY());
         }
     }
 
@@ -132,7 +146,7 @@ public class FormSeller extends Form {
         cbAMAZON = new JCheckBox();
         cbDD = new JCheckBox();
         spTableResult = new JScrollPane();
-        tbResult = new JTable(){
+        tbResult = new JTable() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -148,12 +162,6 @@ public class FormSeller extends Form {
         pmShop = new JPopupMenu();
         miShopDetail = new JMenuItem();
         miShopBuy = new JMenuItem();
-
-        try {
-            robot = new Robot();
-        } catch (AWTException awtException) {
-            EECError.errorTips(EECError.AWT_ERROR);
-        }
 
         //======== Seller ========
         {
