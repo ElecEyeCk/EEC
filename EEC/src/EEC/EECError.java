@@ -17,7 +17,7 @@ public class EECError {
 
     private static Map<Integer, String> map = new HashMap<>();
 
-    public static void initEECError() {
+    private static void initEECError() {
         map.put(ID_NOT_FOUND, "用户名不存在");
         map.put(WRONG_PASSWORD, "密码错误");
         map.put(ID_EXISTED, "用户名已存在");

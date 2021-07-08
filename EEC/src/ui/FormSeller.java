@@ -55,9 +55,12 @@ public class FormSeller extends Form {
     }
 
     private void miShopDetailActionPerformed(ActionEvent e) {
-        Item item = Item.getItem((String) tbResult.getValueAt(tbResult.getSelectedRow(), 0), EEC.currentDate);
-        FormManager.FD.setDetail(item);
-        FormManager.FD.show(true);
+        JMenuItem mi = (JMenuItem) e.getSource();
+        if (mi.getX() >= tbResult.getX() && mi.getY() >= tbResult.getY() && mi.getX() <= tbResult.getX() + tbResult.getWidth() && mi.getY() <= tbResult.getY() + tbResult.getHeight()) {
+            Item item = Item.getItem((String) tbResult.getValueAt(tbResult.getSelectedRow(), 0), EEC.currentDate);
+            FormManager.FD.setDetail(item);
+            FormManager.FD.show(true);
+        }
     }
 
     private void miShopBuyActionPerformed(ActionEvent e) {
@@ -65,6 +68,7 @@ public class FormSeller extends Form {
         if (mi.getX() >= tbResult.getX() && mi.getY() >= tbResult.getY() && mi.getX() <= tbResult.getX() + tbResult.getWidth() && mi.getY() <= tbResult.getY() + tbResult.getHeight()) {
             String name = (String) tbResult.getValueAt(tbResult.getSelectedRow(), 0);
             Item item = Item.getItem(name, EEC.currentDate);
+            // 调用系统浏览器打开链接
             try {
                 Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler https:" + item.getLink());
             } catch (IOException ioException) {
