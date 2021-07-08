@@ -5,6 +5,10 @@ import DAO.DAO;
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,6 +16,7 @@ import java.util.Date;
 import java.util.Enumeration;
 
 public class Utils {
+    // 数据库验证登录
     public static int validateLogin(String account, String password) {
         ArrayList<Object> IDs = DAO.search("SELECT ID FROM user", "ID");
         if (!findID(account, IDs))
@@ -27,12 +32,25 @@ public class Utils {
         }
     }
 
+    // 数据库验证注册
     public static int validateRegister(String account) {
         ArrayList<Object> IDs = DAO.search("SELECT ID FROM user", "ID");
         if (findID(account, IDs))
             return EECError.ID_EXISTED;
         else
             return EECError.SUCCESS;
+    }
+
+    // 在数据库中注册用户
+    public static int register(String ID, String password, String shopLink) {
+        String sql = "INSERT INTO user (ID,password,shop) VALUES ('" + ID + "','" + password + "','" + shopLink + "')";
+        return DAO.executeSQL(sql, DAO.INSERT);
+    }
+
+    // 更新user数据库记录中的shop字段
+    public static int updateShop(String shopLink, String ID) {
+        String sql = "UPDATE user SET shop='" + shopLink + "' where ID='" + ID + "'";
+        return DAO.executeSQL(sql, DAO.UPDATE);
     }
 
     private static boolean findID(String account, ArrayList<Object> result) {
@@ -44,7 +62,8 @@ public class Utils {
         return false;
     }
 
-    public static void FitTableColumns(JTable myTable, String[] ignoredColumnLabels) {
+    // 使JTable自动适应列宽
+    public static void fitTableColumns(JTable myTable, String[] ignoredColumnLabels) {
         JTableHeader header = myTable.getTableHeader();
         int rowCount = myTable.getRowCount();
         int sum = 0;
@@ -77,11 +96,13 @@ public class Utils {
             myTable.getColumnModel().getColumn(0).setWidth(myTable.getWidth() - sum + myTable.getColumnModel().getColumn(0).getWidth());
     }
 
+    // 获取当前程序运行日期
     public static int getCurrentDate() {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
         return Integer.parseInt(df.format(new Date()));// new Date()为获取当前系统时间
     }
 
+    // 获取服务器中商品信息最新日期
     public static int getNewestDate() {
         ArrayList<Object> result = DAO.search("select date from date", "date");
         int max = 0;
@@ -92,11 +113,19 @@ public class Utils {
         return max;
     }
 
+    // 调用系统浏览器打开链接
     public static void openURL(String url) {
         try {
             Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
         } catch (IOException ioException) {
-            EECError.errorTips(EECError.OPEN_URL_ERROR);
+            EECError.error(EECError.OPEN_URL_ERROR);
         }
+    }
+
+    // 复制文本到指定剪切板
+    public static void setSysClipboardText(String writeMe) {
+        Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Transferable tText = new StringSelection(writeMe);
+        clip.setContents(tText, null);
     }
 }

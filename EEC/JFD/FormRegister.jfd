@@ -10,6 +10,7 @@ new FormModel {
 			"$sizePolicy": 1
 			"resizable": false
 			"iconImage": new com.jformdesigner.model.SwingIcon( 0, "/resource/jpg/ICON.jpg" )
+			addEvent( new FormEvent( "java.awt.event.WindowFocusListener", "windowGainedFocus", "RegisterWindowGainedFocus", true ) )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "lbAccount"
 				"text": "用户名："
@@ -20,6 +21,8 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JFormattedTextField" ) {
 				name: "ftfAccount"
+				addEvent( new FormEvent( "java.awt.event.FocusListener", "focusLost", "ftfAccountFocusLost", true ) )
+				addEvent( new FormEvent( "java.awt.event.KeyListener", "keyTyped", "ftfAccountKeyTyped", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 270
 				"x": 85
@@ -35,21 +38,23 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JPasswordField" ) {
 				name: "pwPassword"
+				addEvent( new FormEvent( "java.awt.event.FocusListener", "focusLost", "pwPasswordFocusLost", true ) )
+				addEvent( new FormEvent( "java.awt.event.KeyListener", "keyTyped", "pwPasswordKeyTyped", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 269
 				"x": 85
 				"y": 105
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label1"
-				"text": "用户名只能由英文、汉字和数字组成。"
+				name: "lbAccountTips"
+				"text": "用户名由英文、数字和_组成，长度不超过25字符。"
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 85
 				"y": 70
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label2"
-				"text": "密码只能由英文、数字和一些特殊符号组成。"
+				name: "lbPasswordTips"
+				"text": "密码由英文、数字和特殊符号组成，长度不超过25字符。"
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 85
 				"y": 140
@@ -74,6 +79,8 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JPasswordField" ) {
 				name: "pwPassword2"
+				addEvent( new FormEvent( "java.awt.event.FocusListener", "focusLost", "pwPassword2FocusLost", true ) )
+				addEvent( new FormEvent( "java.awt.event.KeyListener", "keyTyped", "pwPassword2KeyTyped", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 269
 				"height": 27
@@ -81,7 +88,7 @@ new FormModel {
 				"y": 180
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label3"
+				name: "lbPassword2Tips"
 				"text": "请再一次输入密码以确认。"
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 240
@@ -90,15 +97,15 @@ new FormModel {
 				"y": 215
 			} )
 			add( new FormComponent( "javax.swing.JCheckBox" ) {
-				name: "checkBox1"
-				"enabled": false
+				name: "cbAccount"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cbAccountActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 360
 				"y": 40
 			} )
 			add( new FormComponent( "javax.swing.JCheckBox" ) {
-				name: "checkBox2"
-				"enabled": false
+				name: "cbPassword"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cbPasswordActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 19
 				"height": 19
@@ -106,8 +113,8 @@ new FormModel {
 				"y": 110
 			} )
 			add( new FormComponent( "javax.swing.JCheckBox" ) {
-				name: "checkBox3"
-				"enabled": false
+				name: "cbPassword2"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBox3ActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 19
 				"height": 19
@@ -115,7 +122,7 @@ new FormModel {
 				"y": 185
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "lbPassword3"
+				name: "lbShop"
 				"text": "店铺链接："
 				"font": #SwingDerivedFont0
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
@@ -124,8 +131,10 @@ new FormModel {
 				"x": 15
 				"y": 255
 			} )
-			add( new FormComponent( "javax.swing.JPasswordField" ) {
-				name: "pwPassword3"
+			add( new FormComponent( "javax.swing.JFormattedTextField" ) {
+				name: "tftShop"
+				addEvent( new FormEvent( "java.awt.event.FocusListener", "focusLost", "tftShopFocusLost", true ) )
+				addEvent( new FormEvent( "java.awt.event.KeyListener", "keyTyped", "tftShopKeyTyped", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 269
 				"height": 27
@@ -133,7 +142,7 @@ new FormModel {
 				"y": 250
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label4"
+				name: "lbShopTips"
 				"text": "（可选）请输入您的店铺链接。"
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 240
@@ -142,9 +151,9 @@ new FormModel {
 				"y": 285
 			} )
 			add( new FormComponent( "javax.swing.JCheckBox" ) {
-				name: "checkBox4"
+				name: "cbShop"
 				"selected": true
-				"enabled": false
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cbShopActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 19
 				"height": 19

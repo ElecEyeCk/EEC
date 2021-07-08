@@ -14,14 +14,14 @@ public class Item {
     private double price;
     private String shop;
     private int date;
-    private String picLink;
+    private String imgLink;
 
     public static final int COMMENTS_HIGH_TO_LOW = 0;
     public static final int COMMENTS_LOW_TO_HIGH = 1;
     public static final int PRICE_HIGH_TO_LOW = 2;
     public static final int PRICE_LOW_TO_HIGH = 3;
 
-    public Item(String id, String name, String link, String class_, String icons, String commit, double price, String shop, int date, String picLink) {
+    public Item(String id, String name, String link, String class_, String icons, String commit, double price, String shop, int date, String imgLink) {
         ID = id;
         this.name = name;
         this.link = link;
@@ -31,7 +31,7 @@ public class Item {
         this.price = price;
         this.shop = shop;
         this.date = date;
-        this.picLink = picLink;
+        this.imgLink = imgLink;
     }
 
     public String getLink() {
@@ -150,8 +150,8 @@ public class Item {
                 date + ' ';
     }
 
-    public String getPicLink() {
-        return picLink;
+    public String getImgLink() {
+        return imgLink;
     }
 
     public String getID() {

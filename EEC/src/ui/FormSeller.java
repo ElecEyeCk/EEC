@@ -1,16 +1,18 @@
 package ui;
 
 import DTO.Item;
-import EEC.*;
+import EEC.EEC;
+import EEC.Utils;
 
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.IOException;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Objects;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.DefaultTableModel;
 
 
 /**
@@ -25,7 +27,7 @@ public class FormSeller extends Form {
     private void btnSearchActionPerformed(ActionEvent e) {
         if (tfInput.getText().equals(""))
             return;
-        ArrayList<Item> items = Item.getItems(tfInput.getText(), cbSort.getSelectedIndex(), EEC.currentDate);
+        ArrayList<Item> items = Item.getItems(tfInput.getText(), cbSort.getSelectedIndex(), EEC.newestDate);
         String[] columnLabels = {"名称", "价格", "评论数", "店铺", "标签"};
         String[][] rowData = new String[items.size()][];
         for (int i = 0; i < items.size(); i++) {
@@ -40,7 +42,7 @@ public class FormSeller extends Form {
         }
         tbResult.setModel(new DefaultTableModel(rowData, columnLabels));
         String[] ignoredColumnLabels = {"名称", "店铺"};
-        Utils.FitTableColumns(tbResult, ignoredColumnLabels);
+        Utils.fitTableColumns(tbResult, ignoredColumnLabels);
     }
 
     private void cbSortActionPerformed(ActionEvent e) {
@@ -62,7 +64,7 @@ public class FormSeller extends Form {
     private void miItemDetailActionPerformed(ActionEvent e) {
         JMenuItem mi = (JMenuItem) e.getSource();
         if (mi.getX() >= tbResult.getX() && mi.getY() >= tbResult.getY() && mi.getX() <= tbResult.getX() + tbResult.getWidth() && mi.getY() <= tbResult.getY() + tbResult.getHeight()) {
-            Item item = Item.getItem((String) tbResult.getValueAt(tbResult.getSelectedRow(), 0), EEC.currentDate);
+            Item item = Item.getItem((String) tbResult.getValueAt(tbResult.getSelectedRow(), 0), EEC.newestDate);
             FormManager.FD.setDetail(item);
             FormManager.FD.show(true);
         }
@@ -72,7 +74,7 @@ public class FormSeller extends Form {
         JMenuItem mi = (JMenuItem) e.getSource();
         if (mi.getX() >= tbResult.getX() && mi.getY() >= tbResult.getY() && mi.getX() <= tbResult.getX() + tbResult.getWidth() && mi.getY() <= tbResult.getY() + tbResult.getHeight()) {
             String name = (String) tbResult.getValueAt(tbResult.getSelectedRow(), 0);
-            Item item = Item.getItem(name, EEC.currentDate);
+            Item item = Item.getItem(name, EEC.newestDate);
             Utils.openURL("https:" + item.getLink());
         }
     }
@@ -125,6 +127,10 @@ public class FormSeller extends Form {
     private void cbAMAZONActionPerformed(ActionEvent e) {
         JOptionPane.showMessageDialog(null, "亚马逊 网站正在开发中！");
         cbAMAZON.setSelected(false);
+    }
+
+    private void miAboutActionPerformed(ActionEvent e) {
+        JOptionPane.showMessageDialog(null, "本软件由BJUT制作。");
     }
 
     private void initComponents() {
@@ -212,6 +218,7 @@ public class FormSeller extends Form {
 
                     //---- miAbout ----
                     miAbout.setText("\u5173\u4e8e");
+                    miAbout.addActionListener(this::miAboutActionPerformed);
                     mSettings.add(miAbout);
                 }
                 mbSeller.add(mSettings);
@@ -315,7 +322,8 @@ public class FormSeller extends Form {
             spTableShopResult.setBounds(675, 115, 565, 535);
 
             //======== tbResult ========
-
+            tbResult.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            tbShopResult.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
             {
                 // compute preferred size
@@ -351,7 +359,6 @@ public class FormSeller extends Form {
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
-
 
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables

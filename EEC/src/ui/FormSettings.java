@@ -2,6 +2,7 @@ package ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 /**
  * @author somnusym
@@ -17,7 +18,7 @@ public class FormSettings extends Form {
 
         //======== Settings ========
         {
-            Settings.setIconImage(new ImageIcon(getClass().getResource("/jpg/ICON.jpg")).getImage());
+            Settings.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("/jpg/ICON.jpg"))).getImage());
             Container SettingsContentPane = Settings.getContentPane();
             SettingsContentPane.setLayout(null);
 

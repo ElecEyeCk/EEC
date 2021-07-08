@@ -47,7 +47,7 @@ public class FormLogin extends Form {
         }
         int errorCode = Utils.validateLogin(ftfAccount.getText(), String.valueOf(pwPassword.getPassword()));
         if (errorCode != EECError.SUCCESS) {
-            EECError.errorTips(errorCode);
+            EECError.error(errorCode);
             return;
         }
         EEC.curUser = User.getUser(ftfAccount.getText());

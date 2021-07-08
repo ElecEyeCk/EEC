@@ -1,8 +1,8 @@
 package DAO;
 
 import EEC.EECError;
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 
-import java.net.ConnectException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -11,10 +11,63 @@ public class DAO {
     private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql://" + IP + ":3306/EEC?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
 
+    public static final int INSERT = 0;
+    public static final int UPDATE = 1;
+    public static final int SELECT = 2;
 
     // 数据库的用户名与密码，需要根据自己的设置
     static final String USER = "root";
     static final String PASS = "Somnusym1";
+
+    public static int executeSQL(String sql, int operationType) {
+        Connection conn = null;
+        Statement stmt = null;
+        ArrayList<Object> result = new ArrayList<>();
+        try {
+            // 注册 JDBC 驱动
+            Class.forName(JDBC_DRIVER);
+
+            // 打开链接
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            // 执行查询
+            stmt = conn.createStatement();
+
+            if (operationType == SELECT)
+                stmt.executeQuery(sql);
+            else {
+                if (!stmt.execute(sql)){
+                    EECError.error(EECError.MYSQL_OPERATION_ERROR);
+                    return EECError.MYSQL_OPERATION_ERROR;
+                }
+            }
+            // 完成后关闭
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            if (e instanceof CommunicationsException) {
+                EECError.error(EECError.CONNECT_ERROR);
+                return EECError.CONNECT_ERROR;
+            }
+            else {
+                EECError.error(EECError.MYSQL_OPERATION_ERROR);
+                return EECError.MYSQL_OPERATION_ERROR;
+            }
+        } finally {
+            // 关闭资源
+            try {
+                if (stmt != null) stmt.close();
+            } catch (SQLException ignored) {
+
+            }
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException ignored) {
+
+            }
+        }
+        return EECError.SUCCESS;
+    }
 
     public static ArrayList<Object> search(String sql, String columnLabel) {
         Connection conn = null;
@@ -41,7 +94,11 @@ public class DAO {
             stmt.close();
             conn.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            if (e instanceof CommunicationsException) {
+                EECError.error(EECError.CONNECT_ERROR);
+            }
+            else
+                EECError.error(EECError.MYSQL_OPERATION_ERROR);
         } finally {
             // 关闭资源
             try {
@@ -73,7 +130,7 @@ public class DAO {
             try {
                 conn = DriverManager.getConnection(DB_URL, USER, PASS);
             } catch (Exception e) {
-                EECError.errorTips(EECError.CONNECT_ERROR);
+                EECError.error(EECError.CONNECT_ERROR);
             }
 
             // 执行查询
@@ -93,7 +150,11 @@ public class DAO {
             stmt.close();
             conn.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            if (e instanceof CommunicationsException) {
+                EECError.error(EECError.CONNECT_ERROR);
+            }
+            else
+                EECError.error(EECError.MYSQL_OPERATION_ERROR);
         } finally {
             // 关闭资源
             try {
@@ -108,4 +169,5 @@ public class DAO {
         }
         return result;
     }
+
 }
