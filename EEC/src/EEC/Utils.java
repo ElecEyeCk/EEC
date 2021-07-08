@@ -5,6 +5,7 @@ import DAO.DAO;
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -89,5 +90,13 @@ public class Utils {
             max = Math.max(date, max);
         }
         return max;
+    }
+
+    public static void openURL(String url) {
+        try {
+            Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
+        } catch (IOException ioException) {
+            EECError.errorTips(EECError.OPEN_URL_ERROR);
+        }
     }
 }

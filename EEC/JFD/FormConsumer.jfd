@@ -13,42 +13,53 @@ new FormModel {
 			auxiliary() {
 				"JavaCodeGenerator.variableModifiers": 1
 			}
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lbSearch"
+				"text": "查询"
+				"font": new java.awt.Font( "Microsoft YaHei UI", 0, 13 )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 35
+				"x": 40
+				"y": 25
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "tfInput"
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 465
+				"x": 40
+				"y": 65
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lbPlatform"
+				"text": "平台："
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 40
+				"y": 115
+			} )
 			add( new FormComponent( "javax.swing.JCheckBox" ) {
 				name: "cbJD"
 				"text": "京东"
 				"selected": true
 				addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "cbJDStateChanged", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 110
-				"y": 70
+				"x": 105
+				"y": 115
 			} )
-			add( new FormComponent( "javax.swing.JTextField" ) {
-				name: "tfInput"
-				"text": "欲查询的商品"
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "cbAMAZON"
+				"text": "亚马逊"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cbAMAZONActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 40
-				"y": 25
-				"width": 340
+				"x": 175
+				"y": 115
 			} )
-			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "btnSearch"
-				"text": "查询"
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnSearchActionPerformed", true ) )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "cbDD"
+				"text": "当当网"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cbDDActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 405
-				"y": 25
-			} )
-			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-				name: "spList"
-				add( new FormComponent( "javax.swing.JList" ) {
-					name: "listResult"
-					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "listResultMouseClicked", true ) )
-				} )
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 40
-				"y": 110
-				"width": 440
-				"height": 335
+				"x": 255
+				"y": 115
 			} )
 			add( new FormComponent( "javax.swing.JComboBox" ) {
 				name: "cbSort"
@@ -59,38 +70,31 @@ new FormModel {
 					addElement( "评论数↑" )
 					addElement( "价格↓" )
 					addElement( "价格↑" )
-					addElement( "销量↓" )
-					addElement( "销量↑" )
 				}
 				addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbSortItemStateChanged", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 398
-				"y": 70
+				"x": 525
+				"y": 110
 			} )
-			add( new FormComponent( "javax.swing.JCheckBox" ) {
-				name: "cbAMAZON"
-				"text": "亚马逊"
-				addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "cbAMAZONStateChanged", true ) )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnSearch"
+				"text": "查询"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnSearchActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 180
-				"y": 70
+				"x": 530
+				"y": 65
 			} )
-			add( new FormComponent( "javax.swing.JCheckBox" ) {
-				name: "cbDD"
-				"text": "当当网"
-				addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "cbDDStateChanged", true ) )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "spTableResult"
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "spTableResultMouseClicked", true ) )
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "tbResult"
+				} )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 59
-				"height": 21
-				"x": 260
-				"y": 70
-			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "lbPlatform"
-				"text": "平台："
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 45
-				"y": 72
+				"width": 565
+				"height": 490
+				"x": 40
+				"y": 160
 			} )
 			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
 				name: "mbConsumer"
@@ -100,6 +104,10 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "miConvertToShop"
 						"text": "申请成为店主"
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "miQuitLogin"
+						"text": "退出登录"
 					} )
 				} )
 				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
@@ -117,7 +125,23 @@ new FormModel {
 			}
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 525, 525 )
+			"size": new java.awt.Dimension( 645, 720 )
+		} )
+		add( new FormContainer( "javax.swing.JPopupMenu", new FormLayoutManager( class javax.swing.JPopupMenu ) ) {
+			name: "pmShop"
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "miShopDetail"
+				"text": "查看详细信息"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "miShopDetailActionPerformed", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "miShopBuy"
+				"text": "跳转购买链接"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "miShopBuyActionPerformed", true ) )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 735, 550 )
+			"size": new java.awt.Dimension( 112, 54 )
 		} )
 	}
 }

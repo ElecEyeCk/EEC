@@ -11,7 +11,7 @@ public class EECError {
     public static final int WRONG_PASSWORD = 10002;
     public static final int ID_EXISTED = 10003;
 
-    // 系统逻辑错误 - 一律以ERROR结尾
+    // 系统逻辑错误 --- 一律以ERROR结尾
     public static final int CONNECT_ERROR = 20001;
     public static final int OPEN_URL_ERROR = 20002;
 

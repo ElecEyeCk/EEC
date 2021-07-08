@@ -145,15 +145,15 @@ public class FormSeller  {
 			sp.setForeground(new Color(153, 153, 153));
 			sp.setOrientation(SwingConstants.VERTICAL);
 			SellerContentPane.add(sp);
-			sp.setBounds(500, 5, 5, 535);
+			sp.setBounds(655, -5, 5, 660);
 			SellerContentPane.add(tfInput);
-			tfInput.setBounds(40, 65, 340, tfInput.getPreferredSize().height);
+			tfInput.setBounds(40, 65, 495, tfInput.getPreferredSize().height);
 
 			//---- btnSearch ----
 			btnSearch.setText("\u67e5\u8be2");
 			btnSearch.addActionListener(e -> btnSearchActionPerformed(e));
 			SellerContentPane.add(btnSearch);
-			btnSearch.setBounds(new Rectangle(new Point(405, 65), btnSearch.getPreferredSize()));
+			btnSearch.setBounds(new Rectangle(new Point(560, 65), btnSearch.getPreferredSize()));
 
 			//---- cbSort ----
 			cbSort.setMaximumRowCount(5);
@@ -165,7 +165,7 @@ public class FormSeller  {
 			}));
 			cbSort.addItemListener(e -> cbSortItemStateChanged(e));
 			SellerContentPane.add(cbSort);
-			cbSort.setBounds(new Rectangle(new Point(400, 110), cbSort.getPreferredSize()));
+			cbSort.setBounds(new Rectangle(new Point(555, 110), cbSort.getPreferredSize()));
 
 			//---- lbSearch ----
 			lbSearch.setText("\u67e5\u8be2");
@@ -177,20 +177,20 @@ public class FormSeller  {
 			lbShop.setText("\u6211\u7684\u5e97\u94fa");
 			lbShop.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 13));
 			SellerContentPane.add(lbShop);
-			lbShop.setBounds(new Rectangle(new Point(520, 25), lbShop.getPreferredSize()));
+			lbShop.setBounds(new Rectangle(new Point(675, 25), lbShop.getPreferredSize()));
 			SellerContentPane.add(tfShopInput);
-			tfShopInput.setBounds(520, 65, 340, 27);
+			tfShopInput.setBounds(675, 65, 465, 27);
 
 			//---- btnShopSearch ----
 			btnShopSearch.setText("\u68c0\u7d22");
 			btnShopSearch.addActionListener(e -> btnShopSearchActionPerformed(e));
 			SellerContentPane.add(btnShopSearch);
-			btnShopSearch.setBounds(885, 65, 76, 27);
+			btnShopSearch.setBounds(1165, 65, 76, 27);
 
 			//---- lbPlatform ----
 			lbPlatform.setText("\u5e73\u53f0\uff1a");
 			SellerContentPane.add(lbPlatform);
-			lbPlatform.setBounds(new Rectangle(new Point(40, 120), lbPlatform.getPreferredSize()));
+			lbPlatform.setBounds(new Rectangle(new Point(40, 115), lbPlatform.getPreferredSize()));
 
 			//---- cbJD ----
 			cbJD.setText("\u4eac\u4e1c");
@@ -222,7 +222,7 @@ public class FormSeller  {
 				spTableResult.setViewportView(tbResult);
 			}
 			SellerContentPane.add(spTableResult);
-			spTableResult.setBounds(40, 160, 440, 355);
+			spTableResult.setBounds(40, 160, 595, 490);
 
 			//======== spTabelShopResult ========
 			{
@@ -235,7 +235,7 @@ public class FormSeller  {
 				spTabelShopResult.setViewportView(tbShopResult);
 			}
 			SellerContentPane.add(spTabelShopResult);
-			spTabelShopResult.setBounds(520, 115, 440, 400);
+			spTabelShopResult.setBounds(675, 115, 565, 535);
 
 			{
 				// compute preferred size
@@ -251,7 +251,7 @@ public class FormSeller  {
 				SellerContentPane.setMinimumSize(preferredSize);
 				SellerContentPane.setPreferredSize(preferredSize);
 			}
-			Seller.setSize(1000, 600);
+			Seller.setSize(1280, 720);
 			Seller.setLocationRelativeTo(null);
 		}
 

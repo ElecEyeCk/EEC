@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
@@ -42,7 +43,7 @@ public class FormSeller extends Form {
         Utils.FitTableColumns(tbResult, ignoredColumnLabels);
     }
 
-    private void cbsortActionPerformed(ActionEvent e) {
+    private void cbSortActionPerformed(ActionEvent e) {
         btnSearchActionPerformed(e);
     }
 
@@ -50,11 +51,15 @@ public class FormSeller extends Form {
         // TODO add your code here
     }
 
+    private void miOpenMyShopActionPerformed(ActionEvent actionEvent) {
+        Utils.openURL(EEC.curUser.getShopLink());
+    }
+
     private void cbJDStateChanged(ChangeEvent e) {
         cbJD.setSelected(true);
     }
 
-    private void miShopDetailActionPerformed(ActionEvent e) {
+    private void miItemDetailActionPerformed(ActionEvent e) {
         JMenuItem mi = (JMenuItem) e.getSource();
         if (mi.getX() >= tbResult.getX() && mi.getY() >= tbResult.getY() && mi.getX() <= tbResult.getX() + tbResult.getWidth() && mi.getY() <= tbResult.getY() + tbResult.getHeight()) {
             Item item = Item.getItem((String) tbResult.getValueAt(tbResult.getSelectedRow(), 0), EEC.currentDate);
@@ -68,12 +73,7 @@ public class FormSeller extends Form {
         if (mi.getX() >= tbResult.getX() && mi.getY() >= tbResult.getY() && mi.getX() <= tbResult.getX() + tbResult.getWidth() && mi.getY() <= tbResult.getY() + tbResult.getHeight()) {
             String name = (String) tbResult.getValueAt(tbResult.getSelectedRow(), 0);
             Item item = Item.getItem(name, EEC.currentDate);
-            // 调用系统浏览器打开链接
-            try {
-                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler https:" + item.getLink());
-            } catch (IOException ioException) {
-                EECError.errorTips(EECError.OPEN_URL_ERROR);
-            }
+            Utils.openURL("https:" + item.getLink());
         }
     }
 
@@ -107,13 +107,13 @@ public class FormSeller extends Form {
             if (!inSelected) {
                 tbResult.setRowSelectionInterval(row, row);
             }
-            pmShop.show(e.getComponent(), e.getX(), e.getY());
+            pmItem.show(e.getComponent(), e.getX(), e.getY());
         }
     }
 
     private void tbShopResultMouseClicked(MouseEvent e) {
         if (e.isMetaDown() && tbShopResult.hasFocus()) {
-            pmShop.show(e.getComponent(), e.getX(), e.getY());
+            pmItem.show(e.getComponent(), e.getX(), e.getY());
         }
     }
 
@@ -156,23 +156,24 @@ public class FormSeller extends Form {
                 return false;
             }
         };
-        spTabelShopResult = new JScrollPane();
+        spTableShopResult = new JScrollPane();
         tbShopResult = new JTable() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
-        pmShop = new JPopupMenu();
-        miShopDetail = new JMenuItem();
+        pmItem = new JPopupMenu();
+        miItemDetail = new JMenuItem();
         miShopBuy = new JMenuItem();
+        miOpenMyShop = new JMenuItem();
 
         //======== Seller ========
         {
             Seller.setTitle("\u5e97\u4e3b");
             Seller.setResizable(false);
             Seller.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            Seller.setIconImage(new ImageIcon(getClass().getResource("/jpg/ICON.jpg")).getImage());
+            Seller.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("/jpg/ICON.jpg"))).getImage());
             Container SellerContentPane = Seller.getContentPane();
             SellerContentPane.setLayout(null);
 
@@ -183,14 +184,19 @@ public class FormSeller extends Form {
                 {
                     mShop.setText("\u8d26\u53f7");
 
+                    //---- miOpenMyShop
+                    miOpenMyShop.setText("打开我的店铺");
+                    miOpenMyShop.addActionListener(this::miOpenMyShopActionPerformed);
+                    mShop.add(miOpenMyShop);
+
                     //---- miShopSettings ----
                     miShopSettings.setText("\u5e97\u94fa\u8bbe\u7f6e");
-                    miShopSettings.addActionListener(e -> miShopSettingsActionPerformed(e));
+                    miShopSettings.addActionListener(this::miShopSettingsActionPerformed);
                     mShop.add(miShopSettings);
 
                     //---- miQuitLogin ----
                     miQuitLogin.setText("\u9000\u51fa\u767b\u5f55");
-                    miQuitLogin.addActionListener(e -> miQuitLoginActionPerformed(e));
+                    miQuitLogin.addActionListener(this::miQuitLoginActionPerformed);
                     mShop.add(miQuitLogin);
                 }
                 mbSeller.add(mShop);
@@ -201,7 +207,7 @@ public class FormSeller extends Form {
 
                     //---- miSettings ----
                     miSettings.setText("\u8bbe\u7f6e");
-                    miSettings.addActionListener(e -> miSettingsActionPerformed(e));
+                    miSettings.addActionListener(this::miSettingsActionPerformed);
                     mSettings.add(miSettings);
 
                     //---- miAbout ----
@@ -216,15 +222,15 @@ public class FormSeller extends Form {
             sp.setForeground(new Color(153, 153, 153));
             sp.setOrientation(SwingConstants.VERTICAL);
             SellerContentPane.add(sp);
-            sp.setBounds(500, 5, 5, 535);
+            sp.setBounds(655, 10, 5, 655);
             SellerContentPane.add(tfInput);
-            tfInput.setBounds(40, 65, 340, tfInput.getPreferredSize().height);
+            tfInput.setBounds(40, 65, 495, tfInput.getPreferredSize().height);
 
             //---- btnSearch ----
             btnSearch.setText("\u67e5\u8be2");
-            btnSearch.addActionListener(e -> btnSearchActionPerformed(e));
+            btnSearch.addActionListener(this::btnSearchActionPerformed);
             SellerContentPane.add(btnSearch);
-            btnSearch.setBounds(new Rectangle(new Point(405, 65), btnSearch.getPreferredSize()));
+            btnSearch.setBounds(new Rectangle(new Point(560, 65), btnSearch.getPreferredSize()));
 
             //---- cbSort ----
             cbSort.setMaximumRowCount(5);
@@ -234,9 +240,9 @@ public class FormSeller extends Form {
                     "\u4ef7\u683c\u2193",
                     "\u4ef7\u683c\u2191"
             }));
-            cbSort.addActionListener(e -> cbsortActionPerformed(e));
+            cbSort.addActionListener(this::cbSortActionPerformed);
             SellerContentPane.add(cbSort);
-            cbSort.setBounds(new Rectangle(new Point(400, 110), cbSort.getPreferredSize()));
+            cbSort.setBounds(new Rectangle(new Point(555, 110), cbSort.getPreferredSize()));
 
             //---- lbSearch ----
             lbSearch.setText("\u67e5\u8be2");
@@ -248,37 +254,37 @@ public class FormSeller extends Form {
             lbShop.setText("\u6211\u7684\u5e97\u94fa");
             lbShop.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 13));
             SellerContentPane.add(lbShop);
-            lbShop.setBounds(new Rectangle(new Point(520, 25), lbShop.getPreferredSize()));
+            lbShop.setBounds(new Rectangle(new Point(675, 25), lbShop.getPreferredSize()));
             SellerContentPane.add(tfShopInput);
-            tfShopInput.setBounds(520, 65, 340, 27);
+            tfShopInput.setBounds(675, 65, 465, 27);
 
             //---- btnShopSearch ----
             btnShopSearch.setText("\u68c0\u7d22");
-            btnShopSearch.addActionListener(e -> btnShopSearchActionPerformed(e));
+            btnShopSearch.addActionListener(this::btnShopSearchActionPerformed);
             SellerContentPane.add(btnShopSearch);
-            btnShopSearch.setBounds(885, 65, 76, 27);
+            btnShopSearch.setBounds(1165, 65, 76, 27);
 
             //---- lbPlatform ----
             lbPlatform.setText("\u5e73\u53f0\uff1a");
             SellerContentPane.add(lbPlatform);
-            lbPlatform.setBounds(new Rectangle(new Point(40, 120), lbPlatform.getPreferredSize()));
+            lbPlatform.setBounds(new Rectangle(new Point(40, 115), lbPlatform.getPreferredSize()));
 
             //---- cbJD ----
             cbJD.setText("\u4eac\u4e1c");
             cbJD.setSelected(true);
-            cbJD.addChangeListener(e -> cbJDStateChanged(e));
+            cbJD.addChangeListener(this::cbJDStateChanged);
             SellerContentPane.add(cbJD);
             cbJD.setBounds(new Rectangle(new Point(105, 115), cbJD.getPreferredSize()));
 
             //---- cbAMAZON ----
             cbAMAZON.setText("\u4e9a\u9a6c\u900a");
-            cbAMAZON.addActionListener(e -> cbAMAZONActionPerformed(e));
+            cbAMAZON.addActionListener(this::cbAMAZONActionPerformed);
             SellerContentPane.add(cbAMAZON);
             cbAMAZON.setBounds(new Rectangle(new Point(175, 115), cbAMAZON.getPreferredSize()));
 
             //---- cbDD ----
             cbDD.setText("\u5f53\u5f53\u7f51");
-            cbDD.addActionListener(e -> cbDDActionPerformed(e));
+            cbDD.addActionListener(this::cbDDActionPerformed);
             SellerContentPane.add(cbDD);
             cbDD.setBounds(new Rectangle(new Point(255, 115), cbDD.getPreferredSize()));
 
@@ -293,9 +299,9 @@ public class FormSeller extends Form {
                 spTableResult.setViewportView(tbResult);
             }
             SellerContentPane.add(spTableResult);
-            spTableResult.setBounds(40, 160, 440, 355);
+            spTableResult.setBounds(40, 160, 595, 490);
 
-            //======== spTabelShopResult ========
+            //======== spTableShopResult ========
             {
                 tbShopResult.addMouseListener(new MouseAdapter() {
                     @Override
@@ -303,10 +309,10 @@ public class FormSeller extends Form {
                         tbShopResultMouseClicked(e);
                     }
                 });
-                spTabelShopResult.setViewportView(tbShopResult);
+                spTableShopResult.setViewportView(tbShopResult);
             }
-            SellerContentPane.add(spTabelShopResult);
-            spTabelShopResult.setBounds(520, 115, 440, 400);
+            SellerContentPane.add(spTableShopResult);
+            spTableShopResult.setBounds(675, 115, 565, 535);
 
             //======== tbResult ========
 
@@ -325,25 +331,27 @@ public class FormSeller extends Form {
                 SellerContentPane.setMinimumSize(preferredSize);
                 SellerContentPane.setPreferredSize(preferredSize);
             }
-            Seller.setSize(1000, 600);
+            Seller.setSize(1280, 720);
             Seller.setLocationRelativeTo(null);
         }
 
-        //======== pmShop ========
+        //======== pmItem ========
         {
 
-            //---- miShopDetail ----
-            miShopDetail.setText("\u67e5\u770b\u8be6\u7ec6\u4fe1\u606f");
-            miShopDetail.addActionListener(e -> miShopDetailActionPerformed(e));
-            pmShop.add(miShopDetail);
+            //---- miItemDetail ----
+            miItemDetail.setText("\u67e5\u770b\u8be6\u7ec6\u4fe1\u606f");
+            miItemDetail.addActionListener(this::miItemDetailActionPerformed);
+            pmItem.add(miItemDetail);
 
             //---- miShopBuy ----
             miShopBuy.setText("\u8df3\u8f6c\u8d2d\u4e70\u94fe\u63a5");
-            miShopBuy.addActionListener(e -> miShopBuyActionPerformed(e));
-            pmShop.add(miShopBuy);
+            miShopBuy.addActionListener(this::miShopBuyActionPerformed);
+            pmItem.add(miShopBuy);
+
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
+
 
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
@@ -369,10 +377,11 @@ public class FormSeller extends Form {
     private JCheckBox cbDD;
     private JScrollPane spTableResult;
     private JTable tbResult;
-    private JScrollPane spTabelShopResult;
+    private JScrollPane spTableShopResult;
     private JTable tbShopResult;
-    private JPopupMenu pmShop;
-    private JMenuItem miShopDetail;
+    private JPopupMenu pmItem;
+    private JMenuItem miItemDetail;
     private JMenuItem miShopBuy;
+    private JMenuItem miOpenMyShop;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }
