@@ -21,7 +21,7 @@ icons_list = []
 img_list = []
 
 # 按需替换路径
-file_path = "C:/Users/王羽钧/Desktop/大三下/软件工程课设/数据集/JD_Comput4.csv"
+file_path = "C:/Users/王羽钧/Desktop/大三下/软件工程课设/数据集/JD_Comput9.csv"
 
 
 def login():
@@ -50,7 +50,7 @@ def index_page(page, opt):
             driver.get(url)
         if page == 1 and opt == 3:
             url = 'https://search.jd.com/Search?keyword=%E7%94%B5%E5%99%A8&enc=utf-8&wq=' \
-                  'dian%27qi&pvid=73eeb5ab7198421ba01851e1dd422fbf'
+                  'dian%27qi&pvid=1f0eea62444a46b78a1ac87f08e265d3'
             driver.get(url)
         if page > 1 and opt == 1:
             url = 'https://search.jd.com/Search?keyword=%E7%94%B5%E8%84%91&suggest=2.his.0.0&wq=' \
@@ -61,8 +61,8 @@ def index_page(page, opt):
                   '%E6%89%8B%E6%9C%BA&pvid=f616fe6060be41d0ade5c677558afede&page=' + str(2 * page - 1)
             driver.get(url)
         if page > 1 and opt == 3:
-            url = 'https://search.jd.com/Search?keyword=%E7%94%B5%E5%99%A8&qrst=1&wq=%E7%94%B5%E5%99%A8&stock=' \
-                  '1&pvid=3f4aaacab5344d3ab83b87b0f6132693&page=' + str(2 * page - 1)
+            url = 'https://search.jd.com/Search?keyword=%E7%94%B5%E5%99%A8&qrst=1&wq=' \
+                  '%E7%94%B5%E5%99%A8&stock=1&pvid=1f0eea62444a46b78a1ac87f08e265d3&page=' + str(2 * page - 1)
             driver.get(url)
         get_products()
     except TimeoutException:
@@ -83,10 +83,10 @@ def get_products():
        console.log('scrollTop:'+scrollTop)
        console.log('scrollHeight:'+document.body.scrollHeight)
        window.scrollTo(0, scrollTop+ispeed)
-    }, 40)
+    }, 20)
     '''
     driver.execute_script(js)
-    time.sleep(4.5)
+    time.sleep(2.5)
     html = driver.page_source
     doc = PyQuery(html)
     items = doc('#J_goodsList .gl-item .gl-i-wrap').items()
@@ -107,12 +107,17 @@ def main():
         index_page(i, 1)
         print("已爬取"+str(len(adr_list))+"条信息")
     for i in range(0, len(commit_list)):
+        name_list[i] = name_list[i].replace("\n", "")
         idx = commit_list[i].find(" ")
         idx2 = str(price_list[i]).find(" ")
+        idx3 = str(icons_list[i]).find(" ")
         if idx != -1:
             commit_list[i] = commit_list[i][:idx]
         if idx2 != -1:
             price_list[i] = str(price_list[i])[:idx2]
+        if idx3 != -1:
+            if icons_list[i][idx3 + 1] == "自":
+                icons_list[i] = str(icons_list[i])[:idx3]
         commit_list[i] = commit_list[i].strip("+")
         commit_list[i] = commit_list[i].strip('')
         if "万" in commit_list[i]:
