@@ -191,8 +191,13 @@ new FormModel {
 				"text": "跳转购买链接"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "miShopBuyActionPerformed", true ) )
 			} )
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "menuItem1"
+				"text": "text"
+			} )
 		}, new FormLayoutConstraints( null ) {
-			"location": new java.awt.Point( 540, 625 )
+			"location": new java.awt.Point( 540, 645 )
+			"size": new java.awt.Dimension( 110, 120 )
 		} )
 	}
 }

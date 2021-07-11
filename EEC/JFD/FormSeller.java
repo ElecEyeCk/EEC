@@ -95,6 +95,7 @@ public class FormSeller  {
 		pmShop = new JPopupMenu();
 		miShopDetail = new JMenuItem();
 		miShopBuy = new JMenuItem();
+		menuItem1 = new JMenuItem();
 
 		//======== Seller ========
 		{
@@ -267,6 +268,10 @@ public class FormSeller  {
 			miShopBuy.setText("\u8df3\u8f6c\u8d2d\u4e70\u94fe\u63a5");
 			miShopBuy.addActionListener(e -> miShopBuyActionPerformed(e));
 			pmShop.add(miShopBuy);
+
+			//---- menuItem1 ----
+			menuItem1.setText("text");
+			pmShop.add(menuItem1);
 		}
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -299,5 +304,6 @@ public class FormSeller  {
 	private JPopupMenu pmShop;
 	private JMenuItem miShopDetail;
 	private JMenuItem miShopBuy;
+	private JMenuItem menuItem1;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

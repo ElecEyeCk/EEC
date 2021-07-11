@@ -1,7 +1,3 @@
-/*
- * Created by JFormDesigner on Sat Jul 03 21:58:14 CST 2021
- */
-
 package JFD;
 
 import java.awt.*;
