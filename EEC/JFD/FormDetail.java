@@ -24,10 +24,12 @@ public class FormDetail {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		Detail = new JFrame();
 		lbItemPic = new JLabel();
-		label1 = new JLabel();
 		label2 = new JLabel();
-		btnPrevPic = new JButton();
-		btnNextPic = new JButton();
+		btnHistory = new JButton();
+		spDetails = new JScrollPane();
+		taDetails = new JTextArea();
+		taItemName = new JTextArea();
+		btnGoBuy = new JButton();
 
 		//======== Detail ========
 		{
@@ -41,16 +43,7 @@ public class FormDetail {
 			lbItemPic.setIcon(new ImageIcon(getClass().getResource("/resource/jpg/ICON.jpg")));
 			lbItemPic.setVerticalAlignment(SwingConstants.TOP);
 			DetailContentPane.add(lbItemPic);
-			lbItemPic.setBounds(0, 0, 350, 350);
-
-			//---- label1 ----
-			label1.setText("\u7535\u773c\u67e5\u5546\u54c1\u540d\u79f0");
-			label1.setFont(new Font("\u65b9\u6b63\u7c97\u9ed1\u5b8b\u7b80\u4f53", Font.PLAIN, 21));
-			label1.setMaximumSize(new Dimension(430, 60));
-			label1.setMinimumSize(new Dimension(100, 25));
-			label1.setForeground(Color.darkGray);
-			DetailContentPane.add(label1);
-			label1.setBounds(new Rectangle(new Point(360, 10), label1.getPreferredSize()));
+			lbItemPic.setBounds(0, 0, 450, 450);
 
 			//---- label2 ----
 			label2.setText("\u4ef7\u683c\uff1a\u00a5700.70");
@@ -59,23 +52,42 @@ public class FormDetail {
 			label2.setMinimumSize(new Dimension(100, 25));
 			label2.setForeground(new Color(255, 51, 51));
 			DetailContentPane.add(label2);
-			label2.setBounds(new Rectangle(new Point(360, 75), label2.getPreferredSize()));
+			label2.setBounds(new Rectangle(new Point(465, 50), label2.getPreferredSize()));
 
-			//---- btnPrevPic ----
-			btnPrevPic.setText("<");
-			btnPrevPic.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 30));
-			btnPrevPic.setFocusable(false);
-			btnPrevPic.addActionListener(e -> btnPrevPicActionPerformed(e));
-			DetailContentPane.add(btnPrevPic);
-			btnPrevPic.setBounds(new Rectangle(new Point(50, 350), btnPrevPic.getPreferredSize()));
+			//---- btnHistory ----
+			btnHistory.setText("\u67e5\u770b\u5546\u54c1\u5386\u53f2\u4ef7\u683c\u8d8b\u52bf");
+			btnHistory.setFocusable(false);
+			btnHistory.setFont(new Font("\u65b9\u6b63\u7c97\u9ed1\u5b8b\u7b80\u4f53", Font.PLAIN, 18));
+			DetailContentPane.add(btnHistory);
+			btnHistory.setBounds(105, 515, 240, btnHistory.getPreferredSize().height);
 
-			//---- btnNextPic ----
-			btnNextPic.setText(">");
-			btnNextPic.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 30));
-			btnNextPic.setFocusable(false);
-			btnNextPic.addActionListener(e -> btnNextPicActionPerformed(e));
-			DetailContentPane.add(btnNextPic);
-			btnNextPic.setBounds(250, 350, 49, 49);
+			//======== spDetails ========
+			{
+				spDetails.setBorder(null);
+
+				//---- taDetails ----
+				taDetails.setEditable(false);
+				taDetails.setFocusable(false);
+				taDetails.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+				spDetails.setViewportView(taDetails);
+			}
+			DetailContentPane.add(spDetails);
+			spDetails.setBounds(460, 90, 570, 435);
+
+			//---- taItemName ----
+			taItemName.setEditable(false);
+			taItemName.setFocusable(false);
+			taItemName.setFont(new Font("\u65b9\u6b63\u7c97\u9ed1\u5b8b\u7b80\u4f53", Font.PLAIN, 20));
+			taItemName.setText("\u6b63\u5728\u52a0\u8f7d\u5546\u54c1\u540d\u79f0");
+			DetailContentPane.add(taItemName);
+			taItemName.setBounds(460, 0, 570, 45);
+
+			//---- btnGoBuy ----
+			btnGoBuy.setText("\u8df3\u8f6c\u8d2d\u4e70\u94fe\u63a5");
+			btnGoBuy.setFocusable(false);
+			btnGoBuy.setFont(new Font("\u65b9\u6b63\u7c97\u9ed1\u5b8b\u7b80\u4f53", Font.PLAIN, 18));
+			DetailContentPane.add(btnGoBuy);
+			btnGoBuy.setBounds(105, 470, 240, 33);
 
 			{
 				// compute preferred size
@@ -91,7 +103,7 @@ public class FormDetail {
 				DetailContentPane.setMinimumSize(preferredSize);
 				DetailContentPane.setPreferredSize(preferredSize);
 			}
-			Detail.setSize(960, 600);
+			Detail.setSize(1060, 600);
 			Detail.setLocationRelativeTo(null);
 		}
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -100,9 +112,11 @@ public class FormDetail {
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	public JFrame Detail;
 	private JLabel lbItemPic;
-	private JLabel label1;
 	private JLabel label2;
-	private JButton btnPrevPic;
-	private JButton btnNextPic;
+	private JButton btnHistory;
+	private JScrollPane spDetails;
+	private JTextArea taDetails;
+	private JTextArea taItemName;
+	private JButton btnGoBuy;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

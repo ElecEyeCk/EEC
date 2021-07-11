@@ -9,7 +9,10 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,7 +56,7 @@ public class Utils {
         return DAO.executeSQL(sql, DAO.UPDATE);
     }
 
-    private static boolean findID(String account, ArrayList<Object> result) {
+    public static boolean findID(String account, ArrayList<Object> result) {
         for (Object obj : result) {
             String uid = (String) obj;
             if (uid.equals(account))
@@ -123,9 +126,86 @@ public class Utils {
     }
 
     // 复制文本到指定剪切板
-    public static void setSysClipboardText(String writeMe) {
-        Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
-        Transferable tText = new StringSelection(writeMe);
-        clip.setContents(tText, null);
+    public static int setSysClipboardText(String writeMe) {
+        try {
+            Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
+            Transferable tText = new StringSelection(writeMe);
+            clip.setContents(tText, null);
+        } catch (Exception e) {
+            EECError.error(EECError.CLIPBOARD_ERROR);
+            return EECError.CLIPBOARD_ERROR;
+        }
+        return EECError.SUCCESS;
+    }
+
+    public static void getURLImage(String destUrl) {
+        FileOutputStream fos = null;
+        BufferedInputStream bis = null;
+        HttpURLConnection httpUrl = null;
+        URL url = null;
+        int BUFFER_SIZE = 1024;
+        byte[] buf = new byte[BUFFER_SIZE];
+        int size = 0;
+        try {
+            url = new URL(destUrl);
+            httpUrl = (HttpURLConnection) url.openConnection();
+            httpUrl.connect();
+            bis = new BufferedInputStream(httpUrl.getInputStream());
+            fos = new FileOutputStream("c:\\haha.gif");
+            while ((size = bis.read(buf)) != -1) {
+                fos.write(buf, 0, size);
+            }
+            fos.flush();
+        } catch (IOException e) {
+        } catch (ClassCastException e) {
+        } finally {
+            try {
+                fos.close();
+                bis.close();
+                httpUrl.disconnect();
+            } catch (IOException e) {
+            } catch (NullPointerException e) {
+            }
+        }
+    }
+
+    // 获取URL文本
+    public static String getStrByUrl(String urlStr) {
+        String res=null;
+        try {
+            URL url = new URL(urlStr);
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            //设置超时间为3秒
+            conn.setConnectTimeout(3 * 1000);
+            //防止屏蔽程序抓取而返回403错误
+            conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+            //得到输入流
+            InputStream inputStream = conn.getInputStream();
+            res = readInputStream(inputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    public static String readInputStream(InputStream inputStream) throws IOException {
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        while((len = inputStream.read(buffer)) != -1) {
+            bos.write(buffer, 0, len);
+        }
+        bos.close();
+        return bos.toString(StandardCharsets.UTF_8);
+    }
+
+    // 去掉JSON中的格式文本
+    public static String purifyJSON(String JSON) {
+        String result = JSON.replace(",", "\n");
+        result = result.replace("\"", "");
+        result = result.replace("[", "");
+        result = result.replace("]", "");
+        result = result.replace(":", "：");
+        return result;
     }
 }

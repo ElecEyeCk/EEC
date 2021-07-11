@@ -1,8 +1,7 @@
 package ui;
 
 import DTO.Item;
-import EEC.EEC;
-import EEC.Utils;
+import EEC.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -19,6 +18,8 @@ import java.util.Objects;
  * @author somnusym
  */
 public class FormSeller extends Form {
+    private static final int SEARCH_RESULT = 0;
+    private static final int SHOP_RESULT = 1;
 
     public FormSeller() {
         initComponents();
@@ -64,9 +65,15 @@ public class FormSeller extends Form {
     private void miItemDetailActionPerformed(ActionEvent e) {
         JMenuItem mi = (JMenuItem) e.getSource();
         if (mi.getX() >= tbResult.getX() && mi.getY() >= tbResult.getY() && mi.getX() <= tbResult.getX() + tbResult.getWidth() && mi.getY() <= tbResult.getY() + tbResult.getHeight()) {
+            showItemDetail(SEARCH_RESULT);
+        }
+    }
+
+    private void showItemDetail(int eventFrom) {
+        if (eventFrom == SEARCH_RESULT) {
             Item item = Item.getItem((String) tbResult.getValueAt(tbResult.getSelectedRow(), 0), EEC.newestDate);
-            FormManager.FD.setDetail(item);
             FormManager.FD.show(true);
+            FormManager.FD.setDetail(item);
         }
     }
 
@@ -110,6 +117,8 @@ public class FormSeller extends Form {
                 tbResult.setRowSelectionInterval(row, row);
             }
             pmItem.show(e.getComponent(), e.getX(), e.getY());
+        } else if (e.getClickCount() == 2) {
+            showItemDetail(SEARCH_RESULT);
         }
     }
 
@@ -131,6 +140,16 @@ public class FormSeller extends Form {
 
     private void miAboutActionPerformed(ActionEvent e) {
         JOptionPane.showMessageDialog(null, "本软件由BJUT制作。");
+    }
+
+    private void miCopyItemNameActionPerformed(ActionEvent e) {
+        JMenuItem mi = (JMenuItem) e.getSource();
+        if (mi.getX() >= tbResult.getX() && mi.getY() >= tbResult.getY() && mi.getX() <= tbResult.getX() + tbResult.getWidth() && mi.getY() <= tbResult.getY() + tbResult.getHeight()) {
+            String name = (String) tbResult.getValueAt(tbResult.getSelectedRow(), 0);
+            if (Utils.setSysClipboardText(name) == EECError.SUCCESS) {
+                JOptionPane.showMessageDialog(null, "商品名称已复制到剪切板！");
+            }
+        }
     }
 
     private void initComponents() {
@@ -173,6 +192,7 @@ public class FormSeller extends Form {
         miItemDetail = new JMenuItem();
         miShopBuy = new JMenuItem();
         miOpenMyShop = new JMenuItem();
+        miCopyItemName = new JMenuItem();
 
         //======== Seller ========
         {
@@ -356,6 +376,9 @@ public class FormSeller extends Form {
             miShopBuy.addActionListener(this::miShopBuyActionPerformed);
             pmItem.add(miShopBuy);
 
+            miCopyItemName.setText("复制商品名称");
+            miCopyItemName.addActionListener(this::miCopyItemNameActionPerformed);
+            pmItem.add(miCopyItemName);
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
@@ -390,5 +413,6 @@ public class FormSeller extends Form {
     private JMenuItem miItemDetail;
     private JMenuItem miShopBuy;
     private JMenuItem miOpenMyShop;
+    private JMenuItem miCopyItemName;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

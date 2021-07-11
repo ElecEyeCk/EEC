@@ -1,8 +1,7 @@
 package ui;
 
 import DTO.Item;
-import EEC.EEC;
-import EEC.Utils;
+import EEC.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -19,6 +18,8 @@ import java.util.Objects;
  * @author somnusym
  */
 public class FormConsumer extends Form {
+    private static final int SEARCH_RESULT = 0;
+    private static final int SHOP_RESULT = 1;
 
     public FormConsumer() {
         initComponents();
@@ -62,6 +63,14 @@ public class FormConsumer extends Form {
         cbDD.setSelected(false);
     }
 
+    private void showItemDetail(int eventFrom) {
+        if (eventFrom == SEARCH_RESULT) {
+            Item item = Item.getItem((String) tbResult.getValueAt(tbResult.getSelectedRow(), 0), EEC.newestDate);
+            FormManager.FD.setDetail(item);
+            FormManager.FD.show(true);
+        }
+    }
+
     private void tbResultMouseClicked(MouseEvent e) {
         if (e.isMetaDown()) {
             int row = tbResult.rowAtPoint(e.getPoint());
@@ -79,6 +88,8 @@ public class FormConsumer extends Form {
                 tbResult.setRowSelectionInterval(row, row);
             }
             pmItem.show(e.getComponent(), e.getX(), e.getY());
+        } else if (e.getClickCount() == 2) {
+            showItemDetail(SEARCH_RESULT);
         }
     }
 
@@ -114,6 +125,16 @@ public class FormConsumer extends Form {
         JOptionPane.showMessageDialog(null, "本软件由BJUT制作。");
     }
 
+    private void miCopyItemNameActionPerformed(ActionEvent e) {
+        JMenuItem mi = (JMenuItem) e.getSource();
+        if (mi.getX() >= tbResult.getX() && mi.getY() >= tbResult.getY() && mi.getX() <= tbResult.getX() + tbResult.getWidth() && mi.getY() <= tbResult.getY() + tbResult.getHeight()) {
+            String name = (String) tbResult.getValueAt(tbResult.getSelectedRow(), 0);
+            if (Utils.setSysClipboardText(name) == EECError.SUCCESS) {
+                JOptionPane.showMessageDialog(null, "商品名称已复制到剪切板！");
+            }
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         Consumer = new JFrame();
@@ -137,6 +158,7 @@ public class FormConsumer extends Form {
         pmItem = new JPopupMenu();
         miItemDetail = new JMenuItem();
         miShopBuy = new JMenuItem();
+        miCopyItemName = new JMenuItem();
 
         //======== Consumer ========
         {
@@ -277,6 +299,10 @@ public class FormConsumer extends Form {
             miShopBuy.setText("\u8df3\u8f6c\u8d2d\u4e70\u94fe\u63a5");
             miShopBuy.addActionListener(this::miShopBuyActionPerformed);
             pmItem.add(miShopBuy);
+
+            miCopyItemName.setText("复制商品名称");
+            miCopyItemName.addActionListener(this::miCopyItemNameActionPerformed);
+            pmItem.add(miCopyItemName);
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
@@ -303,5 +329,6 @@ public class FormConsumer extends Form {
     private JPopupMenu pmItem;
     private JMenuItem miItemDetail;
     private JMenuItem miShopBuy;
+    private JMenuItem miCopyItemName;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

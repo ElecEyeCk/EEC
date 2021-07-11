@@ -2,6 +2,7 @@ package DTO;
 
 import DAO.DAO;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class Item {
@@ -136,6 +137,11 @@ public class Item {
                 (String) AAO.get(6).get(index),
                 (Integer) AAO.get(7).get(index),
                 picLink);
+    }
+
+    public static ResultSet getItemPriceHistory(String itemID) {
+        String sql = "SELECT price,date FROM 07commodity WHERE ID='" + itemID + "'";
+        return DAO.search(sql);
     }
 
     @Override

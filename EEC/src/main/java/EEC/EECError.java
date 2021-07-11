@@ -16,6 +16,9 @@ public class EECError {
     public static final int CONNECT_ERROR = 20001;
     public static final int OPEN_URL_ERROR = 20002;
     public static final int MYSQL_OPERATION_ERROR = 20003;
+    public static final int CLIPBOARD_ERROR = 20004;
+    public static final int TABLESAW_ERROR = 20005;
+    public static final int GET_HISTORY_ERROR = 20006;
 
     private static Map<Integer, String> map = new HashMap<>();
 
@@ -27,8 +30,14 @@ public class EECError {
         map.put(CONNECT_ERROR, "服务器连接失败！");
         map.put(OPEN_URL_ERROR, "浏览器打开链接失败！");
         map.put(MYSQL_OPERATION_ERROR, "数据库操作失败！");
+        map.put(CLIPBOARD_ERROR, "剪切板操作失败！");
+        map.put(TABLESAW_ERROR, "数据可视化错误！");
+        map.put(GET_HISTORY_ERROR, "获取商品历史价格失败！");
     }
 
+    /**
+     * 注意：对于在可能调用本函数后有后续操作的方法，应返回errorCode，在Form中做分支处理
+     */
     public static void error(int errorCode) {
         if (map.isEmpty())
             initEECError();

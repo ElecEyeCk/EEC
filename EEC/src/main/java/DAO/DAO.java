@@ -16,8 +16,8 @@ public class DAO {
     public static final int SELECT = 2;
 
     // 数据库的用户名与密码，需要根据自己的设置
-    static final String USER = "root";
-    static final String PASS = "Somnusym1";
+    private static final String USER = "root";
+    private static final String PASS = "Somnusym1";
 
     public static int executeSQL(String sql, int operationType) {
         Connection conn = null;
@@ -168,6 +168,38 @@ public class DAO {
             }
         }
         return result;
+    }
+
+    public static ResultSet search(String sql) {
+        Connection conn = null;
+        Statement stmt = null;
+
+        try {
+            // 注册 JDBC 驱动
+            Class.forName(JDBC_DRIVER);
+
+            // 打开链接
+            try {
+                conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            } catch (Exception e) {
+                EECError.error(EECError.CONNECT_ERROR);
+            }
+
+            // 执行查询
+            stmt = conn.createStatement();
+
+            ResultSet rs = stmt.executeQuery(sql);
+            return rs;
+
+        } catch (Exception e) {
+            if (e instanceof CommunicationsException) {
+                EECError.error(EECError.CONNECT_ERROR);
+            }
+            else
+                EECError.error(EECError.MYSQL_OPERATION_ERROR);
+        }
+
+        return null;
     }
 
 }

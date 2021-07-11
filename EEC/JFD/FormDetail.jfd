@@ -20,56 +20,71 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 0
 				"y": 0
-				"width": 350
-				"height": 350
-			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label1"
-				"text": "电眼查商品名称"
-				"font": new java.awt.Font( "方正粗黑宋简体", 0, 21 )
-				"maximumSize": &Dimension0 new java.awt.Dimension( 430, 60 )
-				"minimumSize": &Dimension1 new java.awt.Dimension( 100, 25 )
-				"foreground": sfield java.awt.Color darkGray
-			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 360
-				"y": 10
+				"width": 450
+				"height": 450
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label2"
 				"text": "价格：¥700.70"
 				"font": new java.awt.Font( "等线", 0, 18 )
-				"maximumSize": #Dimension0
-				"minimumSize": #Dimension1
+				"maximumSize": new java.awt.Dimension( 430, 60 )
+				"minimumSize": new java.awt.Dimension( 100, 25 )
 				"foreground": new java.awt.Color( 255, 51, 51, 255 )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 360
-				"y": 75
+				"x": 465
+				"y": 50
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "btnPrevPic"
-				"text": "<"
-				"font": &Font0 new java.awt.Font( "Microsoft YaHei UI", 0, 30 )
+				name: "btnHistory"
+				"text": "查看商品历史价格趋势"
 				"focusable": false
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnPrevPicActionPerformed", true ) )
+				"font": &Font0 new java.awt.Font( "方正粗黑宋简体", 0, 18 )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 50
-				"y": 350
+				"x": 105
+				"y": 515
+				"width": 240
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "spDetails"
+				"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				add( new FormComponent( "javax.swing.JTextArea" ) {
+					name: "taDetails"
+					"editable": false
+					"focusable": false
+					"font": new java.awt.Font( "Microsoft YaHei UI", 0, 14 )
+				} )
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 460
+				"y": 90
+				"width": 570
+				"height": 435
+			} )
+			add( new FormComponent( "javax.swing.JTextArea" ) {
+				name: "taItemName"
+				"editable": false
+				"focusable": false
+				"font": new java.awt.Font( "方正粗黑宋简体", 0, 20 )
+				"text": "正在加载商品名称"
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"width": 570
+				"height": 45
+				"x": 460
+				"y": 0
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "btnNextPic"
-				"text": ">"
+				name: "btnGoBuy"
+				"text": "跳转购买链接"
+				"focusable": false
 				"font": #Font0
-				"focusable": false
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnNextPicActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"width": 49
-				"height": 49
-				"x": 250
-				"y": 350
+				"width": 240
+				"height": 33
+				"x": 105
+				"y": 470
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 960, 600 )
+			"size": new java.awt.Dimension( 1060, 600 )
 		} )
 	}
 }

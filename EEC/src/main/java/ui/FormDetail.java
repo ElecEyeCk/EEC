@@ -1,37 +1,59 @@
 package ui;
 
 import DTO.Item;
-
+import EEC.EECError;
+import EEC.Utils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import tech.tablesaw.api.Table;
+import tech.tablesaw.plotly.Plot;
+import tech.tablesaw.plotly.api.TimeSeriesPlot;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.sql.SQLException;
 import java.util.Objects;
 
 /**
  * @author somnusym
  */
 public class FormDetail extends Form {
+    private Item currentItem = null;
+
     public FormDetail() {
         initComponents();
     }
 
-    private void btnPrevPicActionPerformed(ActionEvent e) {
-        
-    }
-
-    private void btnNextPicActionPerformed(ActionEvent e) {
-        // TODO add your code here
+    private void btnHistoryActionPerformed(ActionEvent e) {
+        Table history = null;
+        try {
+            history = Table.read().db(Item.getItemPriceHistory(currentItem.getID()), "07commodity");
+        } catch (SQLException throwables) {
+            EECError.error(EECError.TABLESAW_ERROR);
+        }
+        if (history == null) {
+            EECError.error(EECError.GET_HISTORY_ERROR);
+            return;
+        }
+        String tempPath = System.getProperty("java.io.tmpdir");
+        Plot.show(
+                TimeSeriesPlot.create("历史价格趋势", history, "date", "price"),
+                new File(tempPath + "result.html")
+        );
     }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         Detail = new JFrame();
         lbItemPic = new JLabel();
-        label1 = new JLabel();
-        label2 = new JLabel();
-        btnPrevPic = new JButton();
-        btnNextPic = new JButton();
+        taItemName = new JTextArea();
+        lbPrice = new JLabel();
+        btnHistory = new JButton();
+        spDetails = new JScrollPane();
+        taDetails = new JTextArea();
+        btnGoBuy = new JButton();
 
         //======== Detail ========
         {
@@ -42,44 +64,57 @@ public class FormDetail extends Form {
             DetailContentPane.setLayout(null);
 
             //---- lbItemPic ----
-            lbItemPic.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/jpg/ICON.jpg"))));
-            lbItemPic.setVerticalAlignment(SwingConstants.TOP);
+            lbItemPic.setVerticalAlignment(SwingConstants.CENTER);
             DetailContentPane.add(lbItemPic);
-            lbItemPic.setBounds(0, 0, 350, 350);
+            lbItemPic.setBounds(0, 0, 450, 450);
 
-            //---- label1 ----
-            label1.setText("\u7535\u773c\u67e5\u5546\u54c1\u540d\u79f0");
-            label1.setFont(new Font("\u65b9\u6b63\u7c97\u9ed1\u5b8b\u7b80\u4f53", Font.PLAIN, 21));
-            label1.setMaximumSize(new Dimension(430, 60));
-            label1.setMinimumSize(new Dimension(100, 25));
-            label1.setForeground(Color.darkGray);
-            DetailContentPane.add(label1);
-            label1.setBounds(new Rectangle(new Point(360, 10), label1.getPreferredSize()));
+            //---- taItemName ----
+            taItemName.setEditable(false);
+            taItemName.setFocusable(false);
+            taItemName.setFont(new Font("\u65b9\u6b63\u7c97\u9ed1\u5b8b\u7b80\u4f53", Font.PLAIN, 20));
+            taItemName.setText("\u6b63\u5728\u52a0\u8f7d\u5546\u54c1\u540d\u79f0");
+            DetailContentPane.add(taItemName);
+            taItemName.setBounds(460, 0, 570, 45);
+            taItemName.setLineWrap(true);
+            taItemName.setWrapStyleWord(true);
+            taItemName.setMaximumSize(new Dimension(570, 45));
 
             //---- label2 ----
-            label2.setText("\u4ef7\u683c\uff1a\u00a5700.70");
-            label2.setFont(new Font("\u7b49\u7ebf", Font.PLAIN, 18));
-            label2.setMaximumSize(new Dimension(430, 60));
-            label2.setMinimumSize(new Dimension(100, 25));
-            label2.setForeground(new Color(255, 51, 51));
-            DetailContentPane.add(label2);
-            label2.setBounds(new Rectangle(new Point(360, 75), label2.getPreferredSize()));
+            lbPrice.setText("\u4ef7\u683c\uff1a\u00a5正在加载...");
+            lbPrice.setFont(new Font("\u7b49\u7ebf", Font.PLAIN, 18));
+            lbPrice.setMaximumSize(new Dimension(430, 60));
+            lbPrice.setMinimumSize(new Dimension(100, 25));
+            lbPrice.setForeground(new Color(255, 51, 51));
+            DetailContentPane.add(lbPrice);
+            lbPrice.setBounds(new Rectangle(new Point(465, 65), lbPrice.getPreferredSize()));
 
-            //---- btnPrevPic ----
-            btnPrevPic.setText("<");
-            btnPrevPic.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 30));
-            btnPrevPic.setFocusable(false);
-            btnPrevPic.addActionListener(e -> btnPrevPicActionPerformed(e));
-            DetailContentPane.add(btnPrevPic);
-            btnPrevPic.setBounds(new Rectangle(new Point(50, 350), btnPrevPic.getPreferredSize()));
+            //======== spDetails ========
+            {
+                spDetails.setBorder(null);
 
-            //---- btnNextPic ----
-            btnNextPic.setText(">");
-            btnNextPic.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 30));
-            btnNextPic.setFocusable(false);
-            btnNextPic.addActionListener(e -> btnNextPicActionPerformed(e));
-            DetailContentPane.add(btnNextPic);
-            btnNextPic.setBounds(250, 350, 49, 49);
+                //---- taDetails ----
+                taDetails.setEditable(false);
+                taDetails.setFocusable(false);
+                spDetails.setViewportView(taDetails);
+                taDetails.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+            }
+            DetailContentPane.add(spDetails);
+            spDetails.setBounds(460, 90, 570, 435);
+
+            //---- btnHistory ----
+            btnHistory.setText("\u67e5\u770b\u5546\u54c1\u5386\u53f2\u4ef7\u683c\u8d8b\u52bf");
+            btnHistory.setFocusable(false);
+            btnHistory.setFont(new Font("\u65b9\u6b63\u7c97\u9ed1\u5b8b\u7b80\u4f53", Font.PLAIN, 18));
+            DetailContentPane.add(btnHistory);
+            btnHistory.setBounds(105, 515, 240, btnHistory.getPreferredSize().height);
+            btnHistory.addActionListener(this::btnHistoryActionPerformed);
+
+            //---- btnGoBuy ----
+            btnGoBuy.setText("\u8df3\u8f6c\u8d2d\u4e70\u94fe\u63a5");
+            btnGoBuy.setFocusable(false);
+            btnGoBuy.setFont(new Font("\u65b9\u6b63\u7c97\u9ed1\u5b8b\u7b80\u4f53", Font.PLAIN, 18));
+            DetailContentPane.add(btnGoBuy);
+            btnGoBuy.setBounds(105, 470, 240, 33);
 
             {
                 // compute preferred size
@@ -95,22 +130,39 @@ public class FormDetail extends Form {
                 DetailContentPane.setMinimumSize(preferredSize);
                 DetailContentPane.setPreferredSize(preferredSize);
             }
-            Detail.setSize(960, 600);
+            Detail.setSize(1060, 600);
             Detail.setLocationRelativeTo(null);
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
     public void setDetail(Item item) {
+        currentItem = item;
+        JSONObject json;
+        String result = Utils.getStrByUrl("http://123.57.42.155:8000/crawler/?url=https:" + item.getLink());
+        json = JSON.parseObject(result);
+        String detailStr = json.getString("detail");
+        String imgURL = json.getString("img");
+        imgURL = Utils.purifyJSON(imgURL);
+        lbItemPic.setText("<html><img src='https:" + imgURL + "' /></html>");
 
+        taItemName.setText(item.getName());
+        taItemName.setBounds(new Rectangle(new Point(460, 10), taItemName.getPreferredSize()));
+
+        String detail = Utils.purifyJSON(detailStr);
+        taDetails.setText(detail);
+
+        lbPrice.setText("价格：" + item.getPrice());
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     public JFrame Detail;
     private JLabel lbItemPic;
-    private JLabel label1;
-    private JLabel label2;
-    private JButton btnPrevPic;
-    private JButton btnNextPic;
+    private JTextArea taItemName;
+    private JLabel lbPrice;
+    private JButton btnHistory;
+    private JScrollPane spDetails;
+    private JTextArea taDetails;
+    private JButton btnGoBuy;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }
