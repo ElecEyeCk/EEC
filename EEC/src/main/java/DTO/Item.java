@@ -112,6 +112,17 @@ public class Item {
         return items;
     }
 
+    public static ArrayList<Item> getShopItems(String keyword, int date) {
+        ArrayList<String> columnLabels = initItemColumnLabels();
+        ArrayList<ArrayList<Object>> result = null;
+        result = DAO.search("SELECT name,adr,class,icons,commit,price,shop,date,id,img FROM 07commodity where shop LIKE '%" + keyword + "%' and date=" + date + " ORDER BY commit DESC", columnLabels);
+        ArrayList<Item> items = new ArrayList<>();
+        for (int i = 0; i < result.get(0).size(); i++) {
+            items.add(AAOtoI(result, i));
+        }
+        return items;
+    }
+
     private static Item AAOtoI(ArrayList<ArrayList<Object>> AAO, int index) {
         Integer commentsInteger = (Integer) AAO.get(4).get(index);
         String comments = String.valueOf(commentsInteger);

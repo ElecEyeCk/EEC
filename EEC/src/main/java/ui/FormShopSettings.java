@@ -8,6 +8,8 @@ import EEC.Utils;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Objects;
 
 /**
@@ -19,10 +21,10 @@ public class FormShopSettings extends Form {
 	}
 
 	private void btnOKActionPerformed(ActionEvent e) {
-		// TODO: 检测链接合法性，待店铺爬虫完成后完成
-
 		if (Utils.updateShop(ftfShopLink.getText(), EEC.curUser.getID()) == EECError.SUCCESS) {
 			EEC.curUser = User.getUser(EEC.curUser.getID());
+		} else {
+			JOptionPane.showMessageDialog(null, "设置商铺链接失败！");
 		}
 	}
 
@@ -40,6 +42,13 @@ public class FormShopSettings extends Form {
 			ShopSettings.setResizable(false);
 			Container ShopSettingsContentPane = ShopSettings.getContentPane();
 			ShopSettingsContentPane.setLayout(null);
+			ShopSettings.addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowActivated(WindowEvent e) {
+					if (EEC.curUser != null)
+						ftfShopLink.setText(EEC.curUser.getShopLink());
+				}
+			});
 
 			//---- lbShopLink ----
 			lbShopLink.setText("\u5e97\u94fa\u94fe\u63a5\uff1a");

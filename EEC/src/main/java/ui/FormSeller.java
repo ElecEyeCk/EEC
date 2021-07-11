@@ -7,9 +7,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -18,11 +16,11 @@ import java.util.Objects;
  * @author somnusym
  */
 public class FormSeller extends Form {
-    private static final int SEARCH_RESULT = 0;
-    private static final int SHOP_RESULT = 1;
+    private boolean flag = true;
 
     public FormSeller() {
         initComponents();
+        flag = false;
     }
 
     private void btnSearchActionPerformed(ActionEvent e) {
@@ -50,8 +48,26 @@ public class FormSeller extends Form {
         btnSearchActionPerformed(e);
     }
 
+    private void showShopItems(String keyword) {
+        ArrayList<Item> items = Item.getShopItems(keyword, EEC.newestDate);
+        String[] columnLabels = {"名称", "价格", "评论数", "标签"};
+        String[][] rowData = new String[items.size()][];
+        for (int i = 0; i < items.size(); i++) {
+            Item item = items.get(i);
+            String[] ob = new String[columnLabels.length];
+            ob[0] = item.getName();
+            ob[1] = String.valueOf(item.getPrice());
+            ob[2] = item.getComments();
+            ob[3] = item.getIcons();
+            rowData[i] = ob;
+        }
+        tbShopResult.setModel(new DefaultTableModel(rowData, columnLabels));
+        String[] ignoredColumnLabels = {"名称"};
+        Utils.fitTableColumns(tbShopResult, ignoredColumnLabels);
+    }
+
     private void btnShopSearchActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        showShopItems(tfShopInput.getText());
     }
 
     private void miOpenMyShopActionPerformed(ActionEvent actionEvent) {
@@ -65,22 +81,28 @@ public class FormSeller extends Form {
     private void miItemDetailActionPerformed(ActionEvent e) {
         JMenuItem mi = (JMenuItem) e.getSource();
         if (mi.getX() >= tbResult.getX() && mi.getY() >= tbResult.getY() && mi.getX() <= tbResult.getX() + tbResult.getWidth() && mi.getY() <= tbResult.getY() + tbResult.getHeight()) {
-            showItemDetail(SEARCH_RESULT);
+            showItemDetail(tbResult);
+        }
+        else {
+            showItemDetail(tbShopResult);
         }
     }
 
-    private void showItemDetail(int eventFrom) {
-        if (eventFrom == SEARCH_RESULT) {
-            Item item = Item.getItem((String) tbResult.getValueAt(tbResult.getSelectedRow(), 0), EEC.newestDate);
-            FormManager.FD.show(true);
-            FormManager.FD.setDetail(item);
-        }
+    private void showItemDetail(JTable table) {
+        Item item = Item.getItem((String) table.getValueAt(table.getSelectedRow(), 0), EEC.newestDate);
+        FormManager.FD.show(true);
+        FormManager.FD.setDetail(item);
     }
 
     private void miShopBuyActionPerformed(ActionEvent e) {
         JMenuItem mi = (JMenuItem) e.getSource();
         if (mi.getX() >= tbResult.getX() && mi.getY() >= tbResult.getY() && mi.getX() <= tbResult.getX() + tbResult.getWidth() && mi.getY() <= tbResult.getY() + tbResult.getHeight()) {
             String name = (String) tbResult.getValueAt(tbResult.getSelectedRow(), 0);
+            Item item = Item.getItem(name, EEC.newestDate);
+            Utils.openURL("https:" + item.getLink());
+        }
+        else {
+            String name = (String) tbShopResult.getValueAt(tbShopResult.getSelectedRow(), 0);
             Item item = Item.getItem(name, EEC.newestDate);
             Utils.openURL("https:" + item.getLink());
         }
@@ -118,13 +140,29 @@ public class FormSeller extends Form {
             }
             pmItem.show(e.getComponent(), e.getX(), e.getY());
         } else if (e.getClickCount() == 2) {
-            showItemDetail(SEARCH_RESULT);
+            showItemDetail(tbResult);
         }
     }
 
     private void tbShopResultMouseClicked(MouseEvent e) {
-        if (e.isMetaDown() && tbShopResult.hasFocus()) {
+        if (e.isMetaDown()) {
+            int row = tbShopResult.rowAtPoint(e.getPoint());
+            int[] rows = tbShopResult.getSelectedRows();
+            boolean inSelected = false;
+            //判断当前右键所在行是否已选中
+            for (int r : rows) {
+                if (row == r) {
+                    inSelected = true;
+                    break;
+                }
+            }
+            //当前鼠标右键点击所在行不被选中则高亮显示选中行
+            if (!inSelected) {
+                tbShopResult.setRowSelectionInterval(row, row);
+            }
             pmItem.show(e.getComponent(), e.getX(), e.getY());
+        } else if (e.getClickCount() == 2) {
+            showItemDetail(tbShopResult);
         }
     }
 
@@ -146,6 +184,12 @@ public class FormSeller extends Form {
         JMenuItem mi = (JMenuItem) e.getSource();
         if (mi.getX() >= tbResult.getX() && mi.getY() >= tbResult.getY() && mi.getX() <= tbResult.getX() + tbResult.getWidth() && mi.getY() <= tbResult.getY() + tbResult.getHeight()) {
             String name = (String) tbResult.getValueAt(tbResult.getSelectedRow(), 0);
+            if (Utils.setSysClipboardText(name) == EECError.SUCCESS) {
+                JOptionPane.showMessageDialog(null, "商品名称已复制到剪切板！");
+            }
+        }
+        else {
+            String name = (String) tbShopResult.getValueAt(tbShopResult.getSelectedRow(), 0);
             if (Utils.setSysClipboardText(name) == EECError.SUCCESS) {
                 JOptionPane.showMessageDialog(null, "商品名称已复制到剪切板！");
             }
@@ -202,6 +246,13 @@ public class FormSeller extends Form {
             Seller.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("/jpg/ICON.jpg"))).getImage());
             Container SellerContentPane = Seller.getContentPane();
             SellerContentPane.setLayout(null);
+            Seller.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowActivated(WindowEvent e) {
+                    if (!flag)
+                        showShopItems("小米京东自营旗舰店");
+                }
+            });
 
             //======== mbSeller ========
             {
