@@ -3,8 +3,6 @@ from selenium.common.exceptions import TimeoutException
 from pyquery import PyQuery
 import time
 import csv
-import details_package
-import os
 
 # Chrome 开启无窗口模式
 # chrome_options = webdriver.ChromeOptions()
@@ -14,15 +12,10 @@ driver = webdriver.Chrome()
 driver.implicitly_wait(10)
 
 adr_list = []
-price_list = []
 name_list = []
-commit_list = []
-shop_list = []
-icons_list = []
-img_list = []
 
 # 按需替换路径
-file_path = "C:/Users/王羽钧/Desktop/大三下/软件工程课设/数据集/JD_Comput15.csv"
+file_path = "C:/Users/王羽钧/Desktop/大三下/软件工程课设/数据集/JD_EP_shop.csv"
 
 
 def login():
@@ -93,58 +86,28 @@ def get_products():
     items = doc('#J_goodsList .gl-item .gl-i-wrap').items()
 
     for item in items:
-        # img_list.append(item.find('.p-img a img').attr('src'))
-        adr_list.append(item.find('.p-img a').attr('href'))
-        price_list.append(item.find('.p-price i').text())
-        name_list.append(item.find('.p-name em').text())
-        commit_list.append(item.find('.p-commit strong a').text())
-        shop_list.append(item.find('.p-shop a').text())
-        icons_list.append(item.find('.p-icons .goods-icons').text())
+        adr_list.append(item.find('.p-shop a').attr('href'))
+        name_list.append(item.find('.p-shop a').text())
 
 
 def main():
     login()
     for i in range(1, 101):
-        index_page(i, 1)
+        index_page(i, 3)
         print("已爬取"+str(len(adr_list))+"条信息")
-    for i in range(0, len(commit_list)):
+    for i in range(0, len(name_list)):
         name_list[i] = name_list[i].replace("\n", "")
-        idx = commit_list[i].find(" ")
-        idx2 = str(price_list[i]).find(" ")
-        idx3 = str(icons_list[i]).find(" ")
-        if idx != -1:
-            commit_list[i] = commit_list[i][:idx]
-        if idx2 != -1:
-            price_list[i] = str(price_list[i])[:idx2]
-        if idx3 != -1:
-            if icons_list[i][idx3 + 1] == "自":
-                icons_list[i] = str(icons_list[i])[:idx3]
-        commit_list[i] = commit_list[i].strip("+")
-        commit_list[i] = commit_list[i].strip('')
-        if "万" in commit_list[i]:
-            commit_list[i] = commit_list[i].strip("万")
-            commit_list[i] = float(commit_list[i]) * 10000
-        else:
-            pass
     with open(file_path, 'w', newline='', encoding='utf-8-sig')as f:
-        fieldnames = ["adr", "name", "price", "commit", "shop", "icons"]
-        # fieldnames = ["adr", "img"]
+        fieldnames = ["adr", "name"]
         f_csv = csv.DictWriter(f, fieldnames=fieldnames)
         f_csv.writeheader()
         for i in range(0, len(adr_list)):
             f_csv.writerow(
                 {"adr": adr_list[i],
-                 # "img": img_list[i]
-                 "name": name_list[i],
-                 "price": price_list[i],
-                 "commit": commit_list[i],
-                 "shop": shop_list[i],
-                 "icons": icons_list[i]
+                 "name": name_list[i]
                  }
             )
     f.close()
-    # os.system("python test.py")
-    # details_package.browser(url)
 
 
 if __name__ == '__main__':

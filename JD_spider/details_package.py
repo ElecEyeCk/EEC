@@ -1,30 +1,35 @@
-import json
 from selenium.common.exceptions import TimeoutException
+from pyquery import PyQuery
 from bs4 import BeautifulSoup as bs
 import requests
-
-header = {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"}
-res = requests.get('https://item.jd.com/100009077475.html', headers=header)
-soup = bs(res.content, 'lxml')
-
-detail_list = []
-weight_list = []
-img_list = []
-temp_list1 = []
-temp_list2 = []
+import json
 
 
-def index_page(url):
+def browser(url):
+    header = {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"}
+    res = requests.get(url, headers=header)
+    soup = bs(res.content, 'lxml')
+    index_page(url, soup)
+
+
+def index_page(url, soup):
+    print('正在爬取'+str(id)+'的详细信息')
     try:
-        get_products()
+        get_products(soup)
     except TimeoutException:
-        index_page(url)
+        index_page(id)
 
 
-def get_products():
+def get_products(driver, soup):
     """
     提取商品数据
     """
+    detail_list = []
+    img_list = []
+    temp_list1 = []
+    temp_list2 = []
+    html = driver.page_source
+    doc = PyQuery(html)
     items = soup.find_all('div', class_='jqzoom main-img')
     for item in items:
         img = item.find_all('img')
@@ -47,15 +52,6 @@ def get_products():
             temp_list2[i] = " "
     for i in range(0, len(detail_list)):
         detail_list[i] = (detail_list[i] + temp_list2[i])
-
-
-def main():
-    url = 'https://item.jd.com/100009077475.html'
-    index_page(url)
     dic = {'img': img_list, 'detail': detail_list}
     dic_js = json.dumps(dic)
-    print(dic_js)
-
-
-if __name__ == '__main__':
-    main()
+    return dic_js
