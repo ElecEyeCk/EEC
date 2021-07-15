@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  */
 public class FormRegister extends Form {
     private final String allCharactersWith_ = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
-    private final String allCharacters = allCharactersWith_ + "~!@#$%^&*()+`-=[]{}\\|;':\",./<>?";
+    private final String allCharacters = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     public FormRegister() {
         initComponents();
@@ -33,8 +33,7 @@ public class FormRegister extends Form {
         else if (!ftfShop.getText().contains("."))
             cbShop.setSelected(false);
         else {
-            System.out.println(Pattern.matches("https://[^\\s]*", ftfShop.getText()));
-            cbShop.setSelected(Pattern.matches("https://[^\\s]*", ftfShop.getText()));
+            cbShop.setSelected(Pattern.matches("^[0-9a-zA-Z]{1,255}$", ftfShop.getText()));
         }
 
         // 密码检查
@@ -51,6 +50,7 @@ public class FormRegister extends Form {
                 EECError.error(errorCode);
             } else {
                 if (Utils.register(ftfAccount.getText(), String.valueOf(pwPassword.getPassword()), ftfShop.getText()) == EECError.SUCCESS) {
+                    JOptionPane.showMessageDialog(null, "注册成功！");
                     FormManager.FR.show(false);
                     FormManager.FL.show(true);
                 }

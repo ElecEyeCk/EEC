@@ -95,7 +95,9 @@ public class FormSeller  {
 		pmShop = new JPopupMenu();
 		miShopDetail = new JMenuItem();
 		miShopBuy = new JMenuItem();
-		menuItem1 = new JMenuItem();
+		miCopyItemName = new JMenuItem();
+		miChangePrice = new JMenuItem();
+		miDeleteItem = new JMenuItem();
 
 		//======== Seller ========
 		{
@@ -103,7 +105,7 @@ public class FormSeller  {
 			Seller.setResizable(false);
 			Seller.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 			Seller.setIconImage(new ImageIcon(getClass().getResource("/resource/jpg/ICON.jpg")).getImage());
-			Container SellerContentPane = Seller.getContentPane();
+			var SellerContentPane = Seller.getContentPane();
 			SellerContentPane.setLayout(null);
 
 			//======== mbSeller ========
@@ -269,9 +271,17 @@ public class FormSeller  {
 			miShopBuy.addActionListener(e -> miShopBuyActionPerformed(e));
 			pmShop.add(miShopBuy);
 
-			//---- menuItem1 ----
-			menuItem1.setText("text");
-			pmShop.add(menuItem1);
+			//---- miCopyItemName ----
+			miCopyItemName.setText("\u590d\u5236\u5546\u54c1\u540d\u79f0");
+			pmShop.add(miCopyItemName);
+
+			//---- miChangePrice ----
+			miChangePrice.setText("\u4fee\u6539\u4ef7\u683c");
+			pmShop.add(miChangePrice);
+
+			//---- miDeleteItem ----
+			miDeleteItem.setText("\u4e0b\u67b6\u5546\u54c1");
+			pmShop.add(miDeleteItem);
 		}
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -304,6 +314,8 @@ public class FormSeller  {
 	private JPopupMenu pmShop;
 	private JMenuItem miShopDetail;
 	private JMenuItem miShopBuy;
-	private JMenuItem menuItem1;
+	private JMenuItem miCopyItemName;
+	private JMenuItem miChangePrice;
+	private JMenuItem miDeleteItem;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

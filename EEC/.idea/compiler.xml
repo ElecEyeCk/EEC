@@ -9,8 +9,8 @@
         <module name="EEC" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="EEC" target="16" />
+    <bytecodeTargetLevel target="11">
+      <module name="EEC" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -192,12 +192,20 @@ new FormModel {
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "miShopBuyActionPerformed", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JMenuItem" ) {
-				name: "menuItem1"
-				"text": "text"
+				name: "miCopyItemName"
+				"text": "复制商品名称"
+			} )
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "miChangePrice"
+				"text": "修改价格"
+			} )
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "miDeleteItem"
+				"text": "下架商品"
 			} )
 		}, new FormLayoutConstraints( null ) {
-			"location": new java.awt.Point( 540, 645 )
-			"size": new java.awt.Dimension( 110, 120 )
+			"location": new java.awt.Point( 535, 615 )
+			"size": new java.awt.Dimension( 110, 180 )
 		} )
 	}
 }

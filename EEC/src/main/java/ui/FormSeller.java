@@ -1,6 +1,7 @@
 package ui;
 
 import DTO.Item;
+import DTO.User;
 import EEC.*;
 
 import javax.swing.*;
@@ -48,12 +49,19 @@ public class FormSeller extends Form {
         btnSearchActionPerformed(e);
     }
 
-    private void showShopItems(String keyword) {
-        ArrayList<Item> items = Item.getShopItems(keyword, EEC.newestDate);
+    public void showShopItems(String keyword, String key) {
+        lbShop.setText("我的店铺（" + keyword + ")");
+        ArrayList<Item> items = null;
+        items = Item.getShopItems(keyword, EEC.newestDate, key);
         String[] columnLabels = {"名称", "价格", "评论数", "标签"};
+
         String[][] rowData = new String[items.size()][];
+        ArrayList<Integer> hides = new ArrayList<Integer>();
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
+            if (!item.getHide()) {
+                hides.add(i);
+            }
             String[] ob = new String[columnLabels.length];
             ob[0] = item.getName();
             ob[1] = String.valueOf(item.getPrice());
@@ -61,17 +69,20 @@ public class FormSeller extends Form {
             ob[3] = item.getIcons();
             rowData[i] = ob;
         }
+        for (Integer h : hides) {
+            rowData = Utils.deleteRowFromTwoDimensionsArray(h, rowData);
+        }
         tbShopResult.setModel(new DefaultTableModel(rowData, columnLabels));
         String[] ignoredColumnLabels = {"名称"};
         Utils.fitTableColumns(tbShopResult, ignoredColumnLabels);
     }
 
     private void btnShopSearchActionPerformed(ActionEvent e) {
-        showShopItems(tfShopInput.getText());
+        showShopItems(EEC.curUser.getShop(), tfShopInput.getText());
     }
 
     private void miOpenMyShopActionPerformed(ActionEvent actionEvent) {
-        Utils.openURL(EEC.curUser.getShopLink());
+        Utils.openURL(Item.getShopLink(EEC.curUser.getShop()));
     }
 
     private void cbJDStateChanged(ChangeEvent e) {
@@ -79,33 +90,22 @@ public class FormSeller extends Form {
     }
 
     private void miItemDetailActionPerformed(ActionEvent e) {
-        JMenuItem mi = (JMenuItem) e.getSource();
-        if (mi.getX() >= tbResult.getX() && mi.getY() >= tbResult.getY() && mi.getX() <= tbResult.getX() + tbResult.getWidth() && mi.getY() <= tbResult.getY() + tbResult.getHeight()) {
-            showItemDetail(tbResult);
-        }
-        else {
-            showItemDetail(tbShopResult);
-        }
+        showItemDetail(tbResult);
     }
 
     private void showItemDetail(JTable table) {
         Item item = Item.getItem((String) table.getValueAt(table.getSelectedRow(), 0), EEC.newestDate);
+        Item.increaseDetail(item);
+        item.setDetail(item.getDetail() + 1);
         FormManager.FD.show(true);
         FormManager.FD.setDetail(item);
     }
 
-    private void miShopBuyActionPerformed(ActionEvent e) {
-        JMenuItem mi = (JMenuItem) e.getSource();
-        if (mi.getX() >= tbResult.getX() && mi.getY() >= tbResult.getY() && mi.getX() <= tbResult.getX() + tbResult.getWidth() && mi.getY() <= tbResult.getY() + tbResult.getHeight()) {
-            String name = (String) tbResult.getValueAt(tbResult.getSelectedRow(), 0);
-            Item item = Item.getItem(name, EEC.newestDate);
-            Utils.openURL("https:" + item.getLink());
-        }
-        else {
-            String name = (String) tbShopResult.getValueAt(tbShopResult.getSelectedRow(), 0);
-            Item item = Item.getItem(name, EEC.newestDate);
-            Utils.openURL("https:" + item.getLink());
-        }
+    private void miJumpBuyActionPerformed(ActionEvent e) {
+        String name = (String) tbResult.getValueAt(tbResult.getSelectedRow(), 0);
+        Item item = Item.getItem(name, EEC.newestDate);
+        Utils.openURL("https:" + item.getLink());
+
     }
 
     private void miShopSettingsActionPerformed(ActionEvent e) {
@@ -113,6 +113,7 @@ public class FormSeller extends Form {
     }
 
     private void miSettingsActionPerformed(ActionEvent e) {
+        Utils.getSettings();
         FormManager.FSe.show(true);
     }
 
@@ -160,7 +161,7 @@ public class FormSeller extends Form {
             if (!inSelected) {
                 tbShopResult.setRowSelectionInterval(row, row);
             }
-            pmItem.show(e.getComponent(), e.getX(), e.getY());
+            pmShop.show(e.getComponent(), e.getX(), e.getY());
         } else if (e.getClickCount() == 2) {
             showItemDetail(tbShopResult);
         }
@@ -182,18 +183,43 @@ public class FormSeller extends Form {
 
     private void miCopyItemNameActionPerformed(ActionEvent e) {
         JMenuItem mi = (JMenuItem) e.getSource();
-        if (mi.getX() >= tbResult.getX() && mi.getY() >= tbResult.getY() && mi.getX() <= tbResult.getX() + tbResult.getWidth() && mi.getY() <= tbResult.getY() + tbResult.getHeight()) {
-            String name = (String) tbResult.getValueAt(tbResult.getSelectedRow(), 0);
-            if (Utils.setSysClipboardText(name) == EECError.SUCCESS) {
-                JOptionPane.showMessageDialog(null, "商品名称已复制到剪切板！");
-            }
+        String name = (String) tbResult.getValueAt(tbResult.getSelectedRow(), 0);
+        if (Utils.setSysClipboardText(name) == EECError.SUCCESS) {
+            JOptionPane.showMessageDialog(null, "商品名称已复制到剪切板！");
         }
-        else {
-            String name = (String) tbShopResult.getValueAt(tbShopResult.getSelectedRow(), 0);
-            if (Utils.setSysClipboardText(name) == EECError.SUCCESS) {
-                JOptionPane.showMessageDialog(null, "商品名称已复制到剪切板！");
-            }
+    }
+
+    private void miShopCopyItemNameActionPerformed(ActionEvent actionEvent) {
+        String name = (String) tbShopResult.getValueAt(tbShopResult.getSelectedRow(), 0);
+        if (Utils.setSysClipboardText(name) == EECError.SUCCESS) {
+            JOptionPane.showMessageDialog(null, "商品名称已复制到剪切板！");
         }
+    }
+
+    private void miShopJumpBuyActionPerformed(ActionEvent actionEvent) {
+        String name = (String) tbShopResult.getValueAt(tbShopResult.getSelectedRow(), 0);
+        Item item = Item.getItem(name, EEC.newestDate);
+        Utils.openURL("https:" + item.getLink());
+    }
+
+    private void miShopItemDetailActionPerformed(ActionEvent actionEvent) {
+        showItemDetail(tbShopResult);
+    }
+
+    private void miDeleteItemActionPerformed(ActionEvent actionEvent) {
+        if (JOptionPane.showConfirmDialog(null, "您确定要下架该商品吗？该操作不可逆！", "警告", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            Item.setItemHide(Item.getID((String) tbShopResult.getValueAt(tbShopResult.getSelectedRow(), 0), EEC.newestDate), 0);
+            EEC.curUser = User.getUser(EEC.curUser.getID());
+            showShopItems(EEC.curUser.getShop(), null);
+        }
+    }
+
+    private void miChangePriceActionPerformed(ActionEvent actionEvent) {
+        FormManager.FCP.show(true);
+        FormManager.FCP.setID(Item.getID((String) tbShopResult.getValueAt(tbShopResult.getSelectedRow(), 0), EEC.newestDate));
+        FormManager.FCP.ChangePrice.setTitle((String) tbShopResult.getValueAt(tbShopResult.getSelectedRow(), 0));
+        EEC.curUser = User.getUser(EEC.curUser.getID());
+        showShopItems(EEC.curUser.getShop(), null);
     }
 
     private void initComponents() {
@@ -234,9 +260,15 @@ public class FormSeller extends Form {
         };
         pmItem = new JPopupMenu();
         miItemDetail = new JMenuItem();
-        miShopBuy = new JMenuItem();
+        miShopJumpBuy = new JMenuItem();
         miOpenMyShop = new JMenuItem();
         miCopyItemName = new JMenuItem();
+        miDeleteItem = new JMenuItem();
+        miChangePrice = new JMenuItem();
+        pmShop = new JPopupMenu();
+        miJumpBuy = new JMenuItem();
+        miShopCopyItemName = new JMenuItem();
+        miShopItemDetail = new JMenuItem();
 
         //======== Seller ========
         {
@@ -250,7 +282,7 @@ public class FormSeller extends Form {
                 @Override
                 public void windowActivated(WindowEvent e) {
                     if (!flag)
-                        showShopItems("小米京东自营旗舰店");
+                        showShopItems(EEC.curUser.getShop(), null);
                 }
             });
 
@@ -332,7 +364,7 @@ public class FormSeller extends Form {
             lbShop.setText("\u6211\u7684\u5e97\u94fa");
             lbShop.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 13));
             SellerContentPane.add(lbShop);
-            lbShop.setBounds(new Rectangle(new Point(675, 25), lbShop.getPreferredSize()));
+            lbShop.setBounds(new Rectangle(675, 25, 465, lbShop.getPreferredSize().height));
             SellerContentPane.add(tfShopInput);
             tfShopInput.setBounds(675, 65, 465, 27);
 
@@ -421,15 +453,34 @@ public class FormSeller extends Form {
             miItemDetail.setText("\u67e5\u770b\u8be6\u7ec6\u4fe1\u606f");
             miItemDetail.addActionListener(this::miItemDetailActionPerformed);
             pmItem.add(miItemDetail);
+            miShopItemDetail.setText("\u67e5\u770b\u8be6\u7ec6\u4fe1\u606f");
+            miShopItemDetail.addActionListener(this::miShopItemDetailActionPerformed);
+            pmShop.add(miShopItemDetail);
 
             //---- miShopBuy ----
-            miShopBuy.setText("\u8df3\u8f6c\u8d2d\u4e70\u94fe\u63a5");
-            miShopBuy.addActionListener(this::miShopBuyActionPerformed);
-            pmItem.add(miShopBuy);
+            miShopJumpBuy.setText("\u8df3\u8f6c\u8d2d\u4e70\u94fe\u63a5");
+            miShopJumpBuy.addActionListener(this::miShopJumpBuyActionPerformed);
+            miJumpBuy.setText("\u8df3\u8f6c\u8d2d\u4e70\u94fe\u63a5");
+            miJumpBuy.addActionListener(this::miJumpBuyActionPerformed);
+            pmItem.add(miJumpBuy);
+            pmShop.add(miShopJumpBuy);
 
             miCopyItemName.setText("复制商品名称");
             miCopyItemName.addActionListener(this::miCopyItemNameActionPerformed);
+            miShopCopyItemName.setText("复制商品名称");
+            miShopCopyItemName.addActionListener(this::miShopCopyItemNameActionPerformed);
             pmItem.add(miCopyItemName);
+            pmShop.add(miShopCopyItemName);
+
+            //---- miChangePrice ----
+            miChangePrice.setText("\u4fee\u6539\u4ef7\u683c");
+            miChangePrice.addActionListener(this::miChangePriceActionPerformed);
+            pmShop.add(miChangePrice);
+
+            //---- miDeleteItem ----
+            miDeleteItem.setText("\u4e0b\u67b6\u5546\u54c1");
+            miDeleteItem.addActionListener(this::miDeleteItemActionPerformed);
+            pmShop.add(miDeleteItem);
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
@@ -461,9 +512,15 @@ public class FormSeller extends Form {
     private JScrollPane spTableShopResult;
     private JTable tbShopResult;
     private JPopupMenu pmItem;
-    private JMenuItem miItemDetail;
-    private JMenuItem miShopBuy;
+    private JMenuItem miShopItemDetail;
+    private JMenuItem miShopJumpBuy;
     private JMenuItem miOpenMyShop;
+    private JMenuItem miShopCopyItemName;
+    private JMenuItem miItemDetail;
+    private JMenuItem miJumpBuy;
     private JMenuItem miCopyItemName;
+    private JMenuItem miChangePrice;
+    private JMenuItem miDeleteItem;
+    private JPopupMenu pmShop;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

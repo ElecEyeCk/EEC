@@ -33,6 +33,14 @@ public class FormLogin  {
 		// TODO add your code here
 	}
 
+	private void cbAutoLoginActionPerformed(ActionEvent e) {
+		// TODO add your code here
+	}
+
+	private void cbPasswordActionPerformed(ActionEvent e) {
+		// TODO add your code here
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		Login = new JFrame();
@@ -51,7 +59,7 @@ public class FormLogin  {
 			Login.setResizable(false);
 			Login.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 			Login.setIconImage(new ImageIcon(getClass().getResource("/resource/jpg/ICON.jpg")).getImage());
-			Container LoginContentPane = Login.getContentPane();
+			var LoginContentPane = Login.getContentPane();
 			LoginContentPane.setLayout(null);
 
 			//---- btnRegister ----
@@ -82,11 +90,13 @@ public class FormLogin  {
 
 			//---- cbAutoLogin ----
 			cbAutoLogin.setText("\u81ea\u52a8\u767b\u5f55");
+			cbAutoLogin.addActionListener(e -> cbAutoLoginActionPerformed(e));
 			LoginContentPane.add(cbAutoLogin);
 			cbAutoLogin.setBounds(new Rectangle(new Point(110, 150), cbAutoLogin.getPreferredSize()));
 
 			//---- cbPassword ----
 			cbPassword.setText("\u8bb0\u4f4f\u5bc6\u7801");
+			cbPassword.addActionListener(e -> cbPasswordActionPerformed(e));
 			LoginContentPane.add(cbPassword);
 			cbPassword.setBounds(290, 150, 71, 21);
 

@@ -1,6 +1,7 @@
 package EEC;
 
 import DAO.DAO;
+import DTO.User;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
@@ -17,8 +18,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Scanner;
 
 public class Utils {
+    public static final String SYSTEM_TEMP_PATH = System.getProperty("java.io.tmpdir");
+
+    public static boolean AUTO_LOGIN = false;
+    public static boolean REMEMBER_PASSWORD = false;
+    public static int DATE_RANGE = 30;
+    public static String PW_REMEMBERED = "";
+    public static String AC_REMEMBERED = "";
+    public static User USER_REMEMBERED = null;
+
     // 数据库验证登录
     public static int validateLogin(String account, String password) {
         ArrayList<Object> IDs = DAO.search("SELECT ID FROM user", "ID");
@@ -42,6 +53,15 @@ public class Utils {
             return EECError.ID_EXISTED;
         else
             return EECError.SUCCESS;
+    }
+
+    public static int validateShop(String code) {
+        ArrayList<Object> names = DAO.search("SELECT name FROM merchant where key='" + code + "'", "name");
+        if (names.size() == 0) {
+            return EECError.WRONG_CODE;
+        } else {
+            return EECError.SUCCESS;
+        }
     }
 
     // 在数据库中注册用户
@@ -107,7 +127,7 @@ public class Utils {
 
     // 获取服务器中商品信息最新日期
     public static int getNewestDate() {
-        ArrayList<Object> result = DAO.search("select date from date", "date");
+        ArrayList<Object> result = DAO.search("select distinct date from 07commodity", "date");
         int max = 0;
         for (Object obj : result) {
             int date = (Integer) obj;
@@ -171,10 +191,10 @@ public class Utils {
 
     // 获取URL文本
     public static String getStrByUrl(String urlStr) {
-        String res=null;
+        String res = null;
         try {
             URL url = new URL(urlStr);
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             //设置超时间为3秒
             conn.setConnectTimeout(3 * 1000);
             //防止屏蔽程序抓取而返回403错误
@@ -192,7 +212,7 @@ public class Utils {
         byte[] buffer = new byte[1024];
         int len = 0;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        while((len = inputStream.read(buffer)) != -1) {
+        while ((len = inputStream.read(buffer)) != -1) {
             bos.write(buffer, 0, len);
         }
         bos.close();
@@ -206,6 +226,90 @@ public class Utils {
         result = result.replace("[", "");
         result = result.replace("]", "");
         result = result.replace(":", "：");
+        return result;
+    }
+
+
+
+    public static void setAccountAndPassword(String account, String password) {
+        File f = new File(SYSTEM_TEMP_PATH + "/EEC/settings.ini");
+        try {
+            PrintWriter bw = new PrintWriter(new FileWriter(f, StandardCharsets.UTF_8));
+//            bw.println("Show Image:" + SHOW_IMAGE);
+            bw.println("Date Range:" + DATE_RANGE);
+            bw.println("Remember Password:" + REMEMBER_PASSWORD);
+            bw.println("Auto Login:" + AUTO_LOGIN);
+            if (REMEMBER_PASSWORD) {
+                bw.println("AC:" + account);
+                bw.println("PW:" + password);
+            }
+            bw.close();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+    }
+
+    public static void getSettings() {
+        File f = new File(SYSTEM_TEMP_PATH + "/EEC/settings.ini");
+        Scanner sc = null;
+        PrintWriter bw = null;
+        try {
+            sc = new Scanner(new FileReader(f, StandardCharsets.UTF_8));
+            while (sc.hasNextLine()) {
+                String str = sc.nextLine();
+                String[] strs = str.split(":");
+                String attribute = strs[0];
+                String data = strs[1];
+                switch (attribute) {
+                    case "Show Image":
+//                        SHOW_IMAGE = Boolean.parseBoolean(data);
+                        break;
+                    case "Date Range":
+                        DATE_RANGE = Integer.parseInt(data);
+                        break;
+                    case "Remember Password":
+                        REMEMBER_PASSWORD = Boolean.parseBoolean(data);
+                        break;
+                    case "Auto Login":
+                        AUTO_LOGIN = Boolean.parseBoolean(data);
+                        break;
+                    case "PW":
+                        if (REMEMBER_PASSWORD)
+                            PW_REMEMBERED = data;
+                        break;
+                    case "AC":
+                        if (REMEMBER_PASSWORD)
+                            AC_REMEMBERED = data;
+                        break;
+                }
+            }
+            if (AUTO_LOGIN)
+                USER_REMEMBERED = User.getUser(AC_REMEMBERED);
+        } catch (IOException e) {
+            try {
+                bw = new PrintWriter(new FileWriter(f, StandardCharsets.UTF_8));
+                bw.println("Show Image:false");
+                bw.println("Date Range:30");
+                bw.println("Remember Password:false");
+                bw.println("Auto Login:false");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            } finally {
+                if (bw != null)
+                    bw.close();
+            }
+        } finally {
+            if (sc != null)
+                sc.close();
+        }
+    }
+
+    public static String[][] deleteRowFromTwoDimensionsArray(int target, String[][] array) {
+        String[][] result = new String[array.length - 1][];
+        System.arraycopy(array, 0, result, 0, target);
+        for (int i = target; i < array.length - 1; i++) {
+            System.arraycopy(array, i + 1, result, i, 1);
+        }
         return result;
     }
 }

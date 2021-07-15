@@ -10,6 +10,7 @@ public class FormManager {
     public static FormRegister FR = new FormRegister();
     public static FormSettings FSe = new FormSettings();
     public static FormShopSettings FSSe = new FormShopSettings();
+    public static FormChangePrice FCP = new FormChangePrice();
     private static ArrayList<Form> allForms = new ArrayList<>();
 
     public static void hideAllForms() {
@@ -30,6 +31,6 @@ public class FormManager {
         allForms.add(FR);
         allForms.add(FSe);
         allForms.add(FSSe);
+        allForms.add(FCP);
     }
-
 }

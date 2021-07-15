@@ -61,6 +61,7 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JCheckBox" ) {
 				name: "cbAutoLogin"
 				"text": "自动登录"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cbAutoLoginActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"x": 110
 				"y": 150
@@ -68,6 +69,7 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JCheckBox" ) {
 				name: "cbPassword"
 				"text": "记住密码"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cbPasswordActionPerformed", true ) )
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
 				"width": 71
 				"height": 21

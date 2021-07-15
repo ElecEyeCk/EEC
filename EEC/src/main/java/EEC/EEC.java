@@ -11,6 +11,7 @@ public class EEC {
 
     public static void main(String[] args) {
         FlatGitHubIJTheme.setup();
+        Utils.getSettings();
         FormManager.FL.show(true);
     }
 }

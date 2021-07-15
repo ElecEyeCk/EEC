@@ -11,6 +11,7 @@ public class EECError {
     public static final int ID_NOT_FOUND = 10001;
     public static final int WRONG_PASSWORD = 10002;
     public static final int ID_EXISTED = 10003;
+    public static final int WRONG_CODE = 10004;
 
     // 系统逻辑错误 --- 一律以ERROR结尾
     public static final int CONNECT_ERROR = 20001;
@@ -26,6 +27,7 @@ public class EECError {
         map.put(ID_NOT_FOUND, "用户名不存在");
         map.put(WRONG_PASSWORD, "密码错误");
         map.put(ID_EXISTED, "用户名已存在");
+        map.put(WRONG_CODE, "认证码错误");
 
         map.put(CONNECT_ERROR, "服务器连接失败！");
         map.put(OPEN_URL_ERROR, "浏览器打开链接失败！");

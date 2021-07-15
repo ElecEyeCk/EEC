@@ -1,11 +1,14 @@
 package ui;
 
 import DTO.Item;
+import DTO.User;
+import EEC.EEC;
 import EEC.EECError;
 import EEC.Utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import tech.tablesaw.api.Table;
+import tech.tablesaw.columns.Column;
 import tech.tablesaw.plotly.Plot;
 import tech.tablesaw.plotly.api.TimeSeriesPlot;
 
@@ -13,6 +16,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Objects;
 
@@ -37,11 +41,22 @@ public class FormDetail extends Form {
             EECError.error(EECError.GET_HISTORY_ERROR);
             return;
         }
-        String tempPath = System.getProperty("java.io.tmpdir");
+        if (history.rowCount() - Utils.DATE_RANGE > 0) {
+            int size = history.rowCount() - Utils.DATE_RANGE;
+            for (int i = 0; i < size; i++) {
+                history = history.dropRows(0);
+            }
+        }
         Plot.show(
                 TimeSeriesPlot.create("历史价格趋势", history, "date", "price"),
-                new File(tempPath + "result.html")
+                new File(Utils.SYSTEM_TEMP_PATH + "result.html")
         );
+    }
+
+    private void btnGoBuyActionPerformed(ActionEvent e) {
+        Item.increaseJump(currentItem);
+        Utils.openURL("https:" + currentItem.getLink());
+        setDetail(Item.getItem(currentItem.getName(), EEC.newestDate));
     }
 
     private void initComponents() {
@@ -65,6 +80,7 @@ public class FormDetail extends Form {
 
             //---- lbItemPic ----
             lbItemPic.setVerticalAlignment(SwingConstants.CENTER);
+            lbItemPic.setHorizontalAlignment(SwingConstants.CENTER);
             DetailContentPane.add(lbItemPic);
             lbItemPic.setBounds(0, 0, 450, 450);
 
@@ -86,7 +102,7 @@ public class FormDetail extends Form {
             lbPrice.setMinimumSize(new Dimension(100, 25));
             lbPrice.setForeground(new Color(255, 51, 51));
             DetailContentPane.add(lbPrice);
-            lbPrice.setBounds(new Rectangle(new Point(465, 65), lbPrice.getPreferredSize()));
+            lbPrice.setBounds(new Rectangle(465, 65, 550, lbPrice.getPreferredSize().height));
 
             //======== spDetails ========
             {
@@ -115,6 +131,7 @@ public class FormDetail extends Form {
             btnGoBuy.setFont(new Font("\u65b9\u6b63\u7c97\u9ed1\u5b8b\u7b80\u4f53", Font.PLAIN, 18));
             DetailContentPane.add(btnGoBuy);
             btnGoBuy.setBounds(105, 470, 240, 33);
+            btnGoBuy.addActionListener(this::btnGoBuyActionPerformed);
 
             {
                 // compute preferred size
@@ -151,8 +168,13 @@ public class FormDetail extends Form {
 
         String detail = Utils.purifyJSON(detailStr);
         taDetails.setText(detail);
-
-        lbPrice.setText("价格：" + item.getPrice());
+        double rate;
+        if (item.getDetail() != 0) {
+            rate = 100 * (double) item.getJump() / (double) item.getDetail();
+            String sr = String.format("%.2f", rate);
+            lbPrice.setText("价格：" + item.getPrice() + "    跳转购买链接率：" + sr + "%(" + item.getJump() + "/" + item.getDetail() + ")");
+        } else
+            lbPrice.setText("价格：" + item.getPrice() + "    跳转购买链接率：0%");
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables

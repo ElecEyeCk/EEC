@@ -7,9 +7,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -165,6 +163,18 @@ public class FormConsumer extends Form {
             Consumer.setTitle("\u666e\u901a\u7528\u6237");
             Consumer.setResizable(false);
             Consumer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            Consumer.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowActivated(WindowEvent e) {
+                    showing = true;
+                }
+
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    showing = false;
+                }
+
+            });
             Consumer.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("/jpg/ICON.jpg"))).getImage());
             Container ConsumerContentPane = Consumer.getContentPane();
             ConsumerContentPane.setLayout(null);
@@ -179,6 +189,7 @@ public class FormConsumer extends Form {
                     //---- miConvertToShop ----
                     miConvertToShop.setText("\u7533\u8bf7\u6210\u4e3a\u5e97\u4e3b");
                     mAccount.add(miConvertToShop);
+                    miConvertToShop.addActionListener(this::miConvertToShopActionPerformed);
 
                     //---- miQuitLogin ----
                     miQuitLogin.setText("\u9000\u51fa\u767b\u5f55");
@@ -305,6 +316,10 @@ public class FormConsumer extends Form {
             pmItem.add(miCopyItemName);
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
+    }
+
+    private void miConvertToShopActionPerformed(ActionEvent actionEvent) {
+        FormManager.FSSe.show(true);
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables

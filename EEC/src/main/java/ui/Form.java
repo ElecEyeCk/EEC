@@ -25,6 +25,8 @@ public class Form {
             ((FormSettings) t).Settings.setVisible(status);
         } else if (this instanceof FormShopSettings) {
             ((FormShopSettings) t).ShopSettings.setVisible(status);
+        } else if (this instanceof FormChangePrice) {
+            ((FormChangePrice) t).ChangePrice.setVisible(status);
         }
     }
 }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class User {
     private String ID;
-    private String shopLink = null;
+    private String shop = null;
 
     public User(String uid) {
         this.ID = uid;
@@ -14,15 +14,15 @@ public class User {
 
     public User(String uid, String shopLink) {
         this.ID = uid;
-        this.shopLink = shopLink;
+        this.shop = shopLink;
     }
 
     public String getID() {
         return ID;
     }
 
-    public String getShopLink() {
-        return shopLink;
+    public String getShop() {
+        return shop;
     }
 
     public static User getUser(String ID) {

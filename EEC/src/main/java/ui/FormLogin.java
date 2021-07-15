@@ -9,15 +9,20 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.Objects;
 
 
 /**
  * @author somnusym
  */
 public class FormLogin extends Form {
+    private int times = 0;
 
     public FormLogin() {
         initComponents();
+        times = 1;
     }
 
     private void btnRegisterActionPerformed(ActionEvent e) {
@@ -52,23 +57,19 @@ public class FormLogin extends Form {
         }
         EEC.curUser = User.getUser(ftfAccount.getText());
         FormManager.FL.show(false);
-        if (EEC.curUser.getShopLink() == null || EEC.curUser.getShopLink().equals("")) {
+        if (EEC.curUser.getShop() == null || EEC.curUser.getShop().equals("")) {
             FormManager.FC.show(true);
         } else {
             FormManager.FS.show(true);
         }
-    }
-
-    private void tfAccountActionPerformed(ActionEvent e) {
-        // TODO add your code here
-    }
-
-    private void rbtnSellerStateChanged(ChangeEvent e) {
-        // TODO add your code here
-    }
-
-    private void rbtnConsumerStateChanged(ChangeEvent e) {
-        // TODO add your code here
+        Utils.REMEMBER_PASSWORD = cbPassword.isSelected();
+        Utils.AUTO_LOGIN = cbAutoLogin.isSelected();
+        if (Utils.REMEMBER_PASSWORD) {
+            Utils.setAccountAndPassword(ftfAccount.getText(), String.valueOf(pwPassword.getPassword()));
+        }
+        else {
+            Utils.setAccountAndPassword(Utils.AC_REMEMBERED, Utils.PW_REMEMBERED);
+        }
     }
 
     private void initComponents() {
@@ -88,19 +89,42 @@ public class FormLogin extends Form {
             Login.setTitle("\u767b\u5f55");
             Login.setResizable(false);
             Login.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            Login.setIconImage(new ImageIcon(getClass().getResource("/jpg/ICON.jpg")).getImage());
+            Login.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowActivated(WindowEvent e) {
+                    if (times != 1)
+                        return;
+                    times++;
+                    cbPassword.setSelected(Utils.REMEMBER_PASSWORD);
+                    cbAutoLogin.setSelected(Utils.AUTO_LOGIN);
+                    if (Utils.REMEMBER_PASSWORD) {
+                        ftfAccount.setText(Utils.AC_REMEMBERED);
+                        pwPassword.setText(Utils.PW_REMEMBERED);
+                    }
+                    if (Utils.AUTO_LOGIN && Utils.USER_REMEMBERED != null) {
+                        EEC.curUser = Utils.USER_REMEMBERED;
+                        FormManager.FL.show(false);
+                        if (EEC.curUser.getShop() == null || EEC.curUser.getShop().equals("")) {
+                            FormManager.FC.show(true);
+                        } else {
+                            FormManager.FS.show(true);
+                        }
+                    }
+                }
+            });
+            Login.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("/jpg/ICON.jpg"))).getImage());
             Container LoginContentPane = Login.getContentPane();
             LoginContentPane.setLayout(null);
 
             //---- btnRegister ----
             btnRegister.setText("\u6ce8\u518c\u8d26\u53f7");
-            btnRegister.addActionListener(e -> btnRegisterActionPerformed(e));
+            btnRegister.addActionListener(this::btnRegisterActionPerformed);
             LoginContentPane.add(btnRegister);
             btnRegister.setBounds(new Rectangle(new Point(110, 185), btnRegister.getPreferredSize()));
 
             //---- btnLogin ----
             btnLogin.setText("\u767b\u5f55");
-            btnLogin.addActionListener(e -> btnLoginActionPerformed(e));
+            btnLogin.addActionListener(this::btnLoginActionPerformed);
             LoginContentPane.add(btnLogin);
             btnLogin.setBounds(new Rectangle(new Point(290, 185), btnLogin.getPreferredSize()));
             LoginContentPane.add(pwPassword);
@@ -122,13 +146,15 @@ public class FormLogin extends Form {
             cbAutoLogin.setText("\u81ea\u52a8\u767b\u5f55");
             cbAutoLogin.setFocusable(false);
             LoginContentPane.add(cbAutoLogin);
-            cbAutoLogin.setBounds(new Rectangle(new Point(110, 150), cbAutoLogin.getPreferredSize()));
+            cbAutoLogin.setBounds(new Rectangle(new Point(110, 145), cbAutoLogin.getPreferredSize()));
 
             //---- cbPassword ----
             cbPassword.setText("\u8bb0\u4f4f\u5bc6\u7801");
             cbPassword.setFocusable(false);
+            cbAutoLogin.addActionListener(this::cbAutoLoginActionPerformed);
+            cbPassword.addActionListener(this::cbPasswordActionPerformed);
             LoginContentPane.add(cbPassword);
-            cbPassword.setBounds(290, 150, 71, 21);
+            cbPassword.setBounds(290, 145, 71, 21);
 
             {
                 // compute preferred size
@@ -149,6 +175,18 @@ public class FormLogin extends Form {
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
+
+    private void cbPasswordActionPerformed(ActionEvent actionEvent) {
+        if (!cbPassword.isSelected())
+            cbAutoLogin.setSelected(false);
+    }
+
+    private void cbAutoLoginActionPerformed(ActionEvent actionEvent) {
+        if (cbAutoLogin.isSelected())
+            cbPassword.setSelected(true);
+    }
+
+
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     public JFrame Login;

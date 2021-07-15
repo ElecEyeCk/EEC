@@ -1,5 +1,6 @@
 package ui;
 
+import DTO.Item;
 import DTO.User;
 import EEC.EEC;
 import EEC.EECError;
@@ -21,10 +22,22 @@ public class FormShopSettings extends Form {
 	}
 
 	private void btnOKActionPerformed(ActionEvent e) {
-		if (Utils.updateShop(ftfShopLink.getText(), EEC.curUser.getID()) == EECError.SUCCESS) {
-			EEC.curUser = User.getUser(EEC.curUser.getID());
-		} else {
-			JOptionPane.showMessageDialog(null, "设置商铺链接失败！");
+		if (Utils.validateShop(ftfShopLink.getText()) == EECError.SUCCESS) {
+			if (Utils.updateShop(Item.getShopName(ftfShopLink.getText()), EEC.curUser.getID()) == EECError.SUCCESS) {
+				EEC.curUser = User.getUser(EEC.curUser.getID());
+				if (FormManager.FC.showing){
+					FormManager.FC.show(false);
+					FormManager.FS.show(true);
+				}
+				ftfShopLink.setText("");
+				FormManager.FSSe.show(false);
+				FormManager.FS.showShopItems(EEC.curUser.getShop(), null);
+			} else {
+				JOptionPane.showMessageDialog(null, "设置商铺失败！");
+			}
+		}
+		else {
+			EECError.error(EECError.WRONG_CODE);
 		}
 	}
 
@@ -42,21 +55,14 @@ public class FormShopSettings extends Form {
 			ShopSettings.setResizable(false);
 			Container ShopSettingsContentPane = ShopSettings.getContentPane();
 			ShopSettingsContentPane.setLayout(null);
-			ShopSettings.addWindowListener(new WindowAdapter() {
-				@Override
-				public void windowActivated(WindowEvent e) {
-					if (EEC.curUser != null)
-						ftfShopLink.setText(EEC.curUser.getShopLink());
-				}
-			});
 
 			//---- lbShopLink ----
-			lbShopLink.setText("\u5e97\u94fa\u94fe\u63a5\uff1a");
+			lbShopLink.setText("店铺认证码：");
 			lbShopLink.setFont(lbShopLink.getFont().deriveFont(lbShopLink.getFont().getStyle() | Font.BOLD, lbShopLink.getFont().getSize() + 2f));
 			ShopSettingsContentPane.add(lbShopLink);
 			lbShopLink.setBounds(new Rectangle(new Point(15, 15), lbShopLink.getPreferredSize()));
 			ShopSettingsContentPane.add(ftfShopLink);
-			ftfShopLink.setBounds(85, 10, 290, ftfShopLink.getPreferredSize().height);
+			ftfShopLink.setBounds(105, 10, 270, ftfShopLink.getPreferredSize().height);
 
 			//---- btnOK ----
 			btnOK.setText("\u786e\u5b9a");

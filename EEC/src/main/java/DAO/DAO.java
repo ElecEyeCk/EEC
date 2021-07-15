@@ -36,15 +36,13 @@ public class DAO {
             if (operationType == SELECT)
                 stmt.executeQuery(sql);
             else {
-                if (!stmt.execute(sql)){
-                    EECError.error(EECError.MYSQL_OPERATION_ERROR);
-                    return EECError.MYSQL_OPERATION_ERROR;
-                }
+                stmt.execute(sql);
             }
             // 完成后关闭
             stmt.close();
             conn.close();
         } catch (Exception e) {
+            e.printStackTrace();
             if (e instanceof CommunicationsException) {
                 EECError.error(EECError.CONNECT_ERROR);
                 return EECError.CONNECT_ERROR;
@@ -94,6 +92,7 @@ public class DAO {
             stmt.close();
             conn.close();
         } catch (Exception e) {
+            e.printStackTrace();
             if (e instanceof CommunicationsException) {
                 EECError.error(EECError.CONNECT_ERROR);
             }
