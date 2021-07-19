@@ -1,6 +1,6 @@
 package DAO;
 
-import EEC.EECError;
+import Utils.EECError;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 
 import java.sql.*;

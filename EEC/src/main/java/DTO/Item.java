@@ -136,7 +136,7 @@ public class Item {
     }
 
     public static String getShopName(String code) {
-        ArrayList<Object> names = DAO.search("SELECT name FROM merchant where id='" + code + "'", "name");
+        ArrayList<Object> names = DAO.search("SELECT name FROM merchant where keycode='" + code + "'", "name");
         if (names.size() == 0) {
             return null;
         } else {

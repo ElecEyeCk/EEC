@@ -1,7 +1,8 @@
 package ui;
 
-import EEC.EECError;
-import EEC.Utils;
+import DTO.Item;
+import Utils.EECError;
+import Utils.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,10 +31,8 @@ public class FormRegister extends Form {
         // 店铺链接检查，可空
         if (ftfShop.getText().length() == 0)
             cbShop.setSelected(true);
-        else if (!ftfShop.getText().contains("."))
-            cbShop.setSelected(false);
         else {
-            cbShop.setSelected(Pattern.matches("^[0-9a-zA-Z]{1,255}$", ftfShop.getText()));
+            cbShop.setSelected(ftfShop.getText().length() == 32);
         }
 
         // 密码检查
@@ -45,14 +44,40 @@ public class FormRegister extends Form {
 
     private void btnRegisterActionPerformed(ActionEvent e) {
         if (cbAccount.isSelected() && cbPassword.isSelected() && cbPassword2.isSelected() && cbShop.isSelected()) {
-            int errorCode = Utils.validateRegister(ftfAccount.getText());
-            if (errorCode != EECError.SUCCESS) {
-                EECError.error(errorCode);
+            if (ftfShop.getText().equals("")) {
+                int errorCode = Utils.validateRegister(ftfAccount.getText());
+                if (errorCode != EECError.SUCCESS) {
+                    EECError.error(errorCode);
+                } else {
+                    if (Utils.register(ftfAccount.getText(), String.valueOf(pwPassword.getPassword()), "") == EECError.SUCCESS) {
+                        JOptionPane.showMessageDialog(null, "注册成功！");
+                        FormManager.FR.show(false);
+                        FormManager.FL.show(true);
+                        ftfAccount.setText("");
+                        pwPassword2.setText("");
+                        pwPassword.setText("");
+                        ftfShop.setText("");
+                    }
+                }
             } else {
-                if (Utils.register(ftfAccount.getText(), String.valueOf(pwPassword.getPassword()), ftfShop.getText()) == EECError.SUCCESS) {
-                    JOptionPane.showMessageDialog(null, "注册成功！");
-                    FormManager.FR.show(false);
-                    FormManager.FL.show(true);
+                int ec = Utils.validateShop(ftfShop.getText());
+                if (ec == EECError.SUCCESS) {
+                    int errorCode = Utils.validateRegister(ftfAccount.getText());
+                    if (errorCode != EECError.SUCCESS) {
+                        EECError.error(errorCode);
+                    } else {
+                        if (Utils.register(ftfAccount.getText(), String.valueOf(pwPassword.getPassword()), Item.getShopName(ftfShop.getText())) == EECError.SUCCESS) {
+                            JOptionPane.showMessageDialog(null, "注册成功！");
+                            FormManager.FR.show(false);
+                            FormManager.FL.show(true);
+                            ftfAccount.setText("");
+                            pwPassword2.setText("");
+                            pwPassword.setText("");
+                            ftfShop.setText("");
+                        }
+                    }
+                } else {
+                    EECError.error(ec);
                 }
             }
         } else {
@@ -271,7 +296,7 @@ public class FormRegister extends Form {
             cbPassword2.setBounds(360, 185, 19, 19);
 
             //---- lbShop ----
-            lbShop.setText("\u5e97\u94fa\u94fe\u63a5\uff1a");
+            lbShop.setText("店铺认证：");
             lbShop.setFont(lbShop.getFont().deriveFont(lbShop.getFont().getStyle() | Font.BOLD, lbShop.getFont().getSize() + 2f));
             RegisterContentPane.add(lbShop);
             lbShop.setBounds(15, 255, 72, 19);
@@ -293,7 +318,7 @@ public class FormRegister extends Form {
             ftfShop.setBounds(85, 250, 269, 27);
 
             //---- lbShopTips ----
-            lbShopTips.setText("（可选）请输入您的店铺链接，以https://开头。");
+            lbShopTips.setText("（可选）请输入您的店铺认证码。");
             RegisterContentPane.add(lbShopTips);
             lbShopTips.setBounds(new Rectangle(new Point(85, 285), lbShopTips.getPreferredSize()));
 

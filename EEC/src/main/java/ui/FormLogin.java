@@ -2,11 +2,10 @@ package ui;
 
 import DTO.User;
 import EEC.EEC;
-import EEC.EECError;
-import EEC.Utils;
+import Utils.EECError;
+import Utils.Utils;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
@@ -57,7 +56,7 @@ public class FormLogin extends Form {
         }
         EEC.curUser = User.getUser(ftfAccount.getText());
         FormManager.FL.show(false);
-        if (EEC.curUser.getShop() == null || EEC.curUser.getShop().equals("")) {
+        if (EEC.curUser.getShop() == null || EEC.curUser.getShop().equals("") || EEC.curUser.getShop().equals("null")) {
             FormManager.FC.show(true);
         } else {
             FormManager.FS.show(true);

@@ -1,6 +1,6 @@
 package ui;
 
-import EEC.Utils;
+import Utils.Utils;
 
 import java.awt.*;
 import java.awt.event.*;

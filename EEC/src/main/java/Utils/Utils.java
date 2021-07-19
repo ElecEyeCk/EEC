@@ -1,4 +1,4 @@
-package EEC;
+package Utils;
 
 import DAO.DAO;
 import DTO.User;
@@ -56,7 +56,7 @@ public class Utils {
     }
 
     public static int validateShop(String code) {
-        ArrayList<Object> names = DAO.search("SELECT name FROM merchant where key='" + code + "'", "name");
+        ArrayList<Object> names = DAO.search("SELECT name FROM merchant where keycode='" + code + "'", "name");
         if (names.size() == 0) {
             return EECError.WRONG_CODE;
         } else {

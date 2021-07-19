@@ -75,7 +75,8 @@ public class FormChangePrice extends Form {
 			Item.updatePrice(ID, Double.parseDouble(textField1.getText()));
 			FormManager.FCP.show(false);
 			FormManager.FS.showShopItems(EEC.curUser.getShop(), null);
-		}
+		} else
+		    JOptionPane.showMessageDialog(null, "请正确输入价格！");
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables

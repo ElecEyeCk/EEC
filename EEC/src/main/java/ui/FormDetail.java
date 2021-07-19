@@ -1,10 +1,9 @@
 package ui;
 
 import DTO.Item;
-import DTO.User;
 import EEC.EEC;
-import EEC.EECError;
-import EEC.Utils;
+import Utils.EECError;
+import Utils.Utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import tech.tablesaw.api.Table;
@@ -16,7 +15,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Objects;
 

@@ -2,6 +2,8 @@ package ui;
 
 import DTO.Item;
 import EEC.*;
+import Utils.EECError;
+import Utils.Utils;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -170,7 +172,7 @@ public class FormConsumer extends Form {
                 }
 
                 @Override
-                public void windowClosed(WindowEvent e) {
+                public void windowDeactivated(WindowEvent e) {
                     showing = false;
                 }
 

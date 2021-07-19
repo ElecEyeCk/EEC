@@ -3,6 +3,8 @@ package ui;
 import DTO.Item;
 import DTO.User;
 import EEC.*;
+import Utils.EECError;
+import Utils.Utils;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -104,8 +106,10 @@ public class FormSeller extends Form {
     private void miJumpBuyActionPerformed(ActionEvent e) {
         String name = (String) tbResult.getValueAt(tbResult.getSelectedRow(), 0);
         Item item = Item.getItem(name, EEC.newestDate);
-        Utils.openURL("https:" + item.getLink());
-
+        if (item.getLink() == null || item.getLink().isBlank())
+            JOptionPane.showMessageDialog(null, "打开失败！");
+        else
+            Utils.openURL("https:" + item.getLink());
     }
 
     private void miShopSettingsActionPerformed(ActionEvent e) {
@@ -275,6 +279,17 @@ public class FormSeller extends Form {
             Seller.setTitle("\u5e97\u4e3b");
             Seller.setResizable(false);
             Seller.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            Seller.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowActivated(WindowEvent e) {
+                    showing = true;
+                }
+
+                @Override
+                public void windowDeactivated(WindowEvent e) {
+                    showing = false;
+                }
+            });
             Seller.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("/jpg/ICON.jpg"))).getImage());
             Container SellerContentPane = Seller.getContentPane();
             SellerContentPane.setLayout(null);

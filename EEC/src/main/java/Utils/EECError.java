@@ -1,4 +1,4 @@
-package EEC;
+package Utils;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public class EECError {
         map.put(ID_NOT_FOUND, "用户名不存在");
         map.put(WRONG_PASSWORD, "密码错误");
         map.put(ID_EXISTED, "用户名已存在");
-        map.put(WRONG_CODE, "认证码错误");
+        map.put(WRONG_CODE, "认证码错误！请检查您的认证码或者联系开发者获取认证码（QQ:812980948）");
 
         map.put(CONNECT_ERROR, "服务器连接失败！");
         map.put(OPEN_URL_ERROR, "浏览器打开链接失败！");

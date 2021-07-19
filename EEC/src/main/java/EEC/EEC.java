@@ -1,6 +1,7 @@
 package EEC;
 
 import DTO.User;
+import Utils.Utils;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubIJTheme;
 import ui.FormManager;
 
